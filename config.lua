@@ -31,7 +31,7 @@ Config.CraftingStations = {
             scale = 0.8,
             color = 1, -- rojo
         },
-        requiredJobs = {'vlarmory'}, -- Solo armería de Valentine puede usar esta estación
+        requiredJobs = {'vlarmory'}, -- Solo armería de Valentine puede usar esta estación en concreto
         requireDuty = true, -- Requiere estar de servicio
         requiredItems = {}, -- items necesarios para usar la estación
     },
