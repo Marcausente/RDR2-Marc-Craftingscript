@@ -95,13 +95,13 @@ Config.Recipes = {
             description = 'Arco estándar',
         },
         {
-            name = 'Arco Mejorado',
+            name = 'Arco reforzado',
             item = 'weapon_bow_improved',
             amount = 1,
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 1,
-            description = 'Arco mejorado',
+            description = 'Arco mejorado con algo mas de potencia y durabilidad',
         },
         {
             name = 'Cuchillo Estándar',
@@ -122,22 +122,22 @@ Config.Recipes = {
             description = 'Tomahawk arrojadizo',
         },
         {
-            name = 'Rifle de Caza Menor',
+            name = 'Rifle Varmmint',
             item = 'weapon_rifle_varmint',
             amount = 1,
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 1,
-            description = 'Rifle para alimañas',
+            description = 'Rifle de caza pequeña hecho para alimañas',
         },
         {
-            name = 'Repetidor Carabina',
+            name = 'Carabina de repeticion',
             item = 'weapon_repeater_carbine',
             amount = 1,
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 1,
-            description = 'Carabina repetidora',
+            description = 'Carabina repetidora, arma de repeticion simple y rapida',
         },
         -- Nivel 2
         {
@@ -147,7 +147,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 2,
-            description = 'Revolver de doble acción',
+            description = 'Revolver de accion rapida, muy veloz pero poco preciso',
         },
         {
             name = 'Cuchillos Arrojadizos',
@@ -174,7 +174,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 2,
-            description = 'Fusil de cerrojo',
+            description = 'Fusil de cerrojo, arma de precision y potencia, largo alcance pero lenta',
         },
         {
             name = 'Escopeta Repetidora',
@@ -183,16 +183,16 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 2,
-            description = 'Escopeta repetidora',
+            description = 'Escopeta repetidora, rapida pero con poca potencia y mucha dispersion',
         },
         {
-            name = 'Repetidor Winchester',
+            name = 'Lancaster de repeticion',
             item = 'weapon_repeater_winchester',
             amount = 1,
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 2,
-            description = 'Repetidora Lancaster',
+            description = 'Repetidora Lancaster, arma extremadamente versatil y rapida, perfecta para caza y defensa',
         },
         -- Nivel 3
         {
@@ -202,7 +202,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 3,
-            description = 'Revolver Lemat',
+            description = 'Revolver de recarga lenta, pero con nueve balas en el cargador',
         },
         {
             name = 'Escopeta Recortada',
@@ -211,7 +211,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 3,
-            description = 'Escopeta recortada',
+            description = 'Escopeta de cartuchera, letal a muy corto alcance, poco precisa pero muy poderosa',
         },
         {
             name = 'Repetidor Litchfield',
@@ -220,7 +220,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 3,
-            description = 'Repetidora Litchfield',
+            description = 'Arma de repeticion rapida y precisa, con un buen cargador y alcance medio',
         },
         {
             name = 'Cuchillo Rústico',
@@ -229,7 +229,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 3,
-            description = 'Cuchillo rústico',
+            description = 'Cuchillo rústico, un cuchillo ligeramente mas grande',
         },
         {
             name = 'Escopeta Doble Cañón',
@@ -238,7 +238,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 3,
-            description = 'Escopeta de dos cañones',
+            description = 'Escopeta de dos cañones, muy poderosa pero con poca precision y gran dispersion, con dos en la recamara',
         },
         -- Nivel 4
         {
@@ -248,7 +248,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 4,
-            description = 'Revolver Schofield',
+            description = 'Revolver muy preciso, con una potencia media y una recarga moderada',
         },
         {
             name = 'Repetidor Evans',
@@ -257,7 +257,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 4,
-            description = 'Repetidora Evans',
+            description = 'Arma extremadamente rapida y con un cargador muy ampliado, aunque poco potente y con un alcance medio',
         },
         {
             name = 'Rifle Springfield',
@@ -266,7 +266,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 4,
-            description = 'Fusil Springfield',
+            description = 'Arma lenta, de recarga tras cada disparo, pero con un alcance muy largo y una gran potencia',
         },
         {
             name = 'Escopeta Doble Cañón Exótica',
@@ -275,7 +275,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 4,
-            description = 'Escopeta de dos cañones exótica',
+            description = 'Escopeta de dos cañones con grabados exoticos, muy poderosa pero con poca precision y gran dispersion, con dos en la recamara',
         },
         -- Nivel 5
         {
@@ -285,7 +285,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 5,
-            description = 'Revolver Navy',
+            description = 'Revolver muy potente y preciso, pero con una recarga lenta y una cadencia también lenta',
         },
         {
             name = 'Pistola Volcanic',
@@ -294,7 +294,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 5,
-            description = 'Pistola Volcanic',
+            description = 'Pistola extremadamente potente, pero lenta en cuanto a cadencia y recarga',
         },
         {
             name = 'Rifle Rollingblock',
@@ -303,7 +303,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 5,
-            description = 'Fusil de francotirador Rolling Block',
+            description = 'Fusil de francotirador con cinco balas, potencia media y muy precisa, excelente para la caza de presas medianas',
         },
         {
             name = 'Escopeta de Corredera',
@@ -312,25 +312,25 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 5,
-            description = 'Escopeta de corredera',
+            description = 'Escopeta con un mecanismo de corredera, muy rapida pero con gran dispersion y potencia media. Tiene cinco balas en el cargador',
         },
         {
-            name = 'Cuchillo Comerciante',
+            name = 'Cuchillo de comerciante',
             item = 'weapon_melee_knife_trader',
             amount = 1,
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 5,
-            description = 'Cuchillo comerciante',
+            description = 'Cuchillo lustroso para gente con dinero',
         },
         {
-            name = 'Cuchillo de Carnicero',
+            name = 'Hacha de Carnicero arrojadiza',
             item = 'weapon_melee_cleaver',
             amount = 1,
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 5,
-            description = 'Cuchillo de carnicero',
+            description = 'Hacha arrojadiza de grandes dimensiones',
         },
         -- Nivel 6
         {
@@ -340,7 +340,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 6,
-            description = 'Pistola Mauser',
+            description = 'Pistola moderna de fabricacion alemana, poco potente pero rapida',
         },
         {
             name = 'Rifle Rollingblock Exótico',
@@ -349,16 +349,16 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 6,
-            description = 'Fusil de francotirador Rolling Block exótico',
+            description = 'Fusil de francotirador Rollingblock pero con grabados exoticos con cinco balas, potencia media y muy precisa, excelente para la caza de presas medianas',
         },
         {
-            name = 'Hacha de Cazador',
+            name = 'Hacha de Cazador arrojadiza',
             item = 'weapon_melee_hatchet_hunter',
             amount = 1,
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 6,
-            description = 'Hacha de cazador',
+            description = 'Hacha de dimensiones medias para arrojar',
         },
         -- Nivel 7
         {
@@ -368,7 +368,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 7,
-            description = 'Pistola semi-automática',
+            description = 'Pistola de fabricacion estadounidense, con una potencia media, pero rapida',
         },
         {
             name = 'Rifle Carcano',
@@ -377,7 +377,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 7,
-            description = 'Fusil de francotirador Carcano',
+            description = 'Fusil de francotirador extremadamente potente, con un alcance muy largo y una gran precision, pero con una sola bala. Excelente para la caza de presas muy grandes',
         },
         {
             name = 'Revolver Cattleman Mexicano',
@@ -386,7 +386,7 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 7,
-            description = 'Cattleman mexicano',
+            description = 'Revolver cattelman con grabados mexicanos',
         },
         -- Nivel 8
         {
@@ -396,16 +396,16 @@ Config.Recipes = {
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 8,
-            description = 'Fusil mataelefantes',
+            description = 'Fusil de dos balas extremadamente potente, con un gran retoceso tras cada disparo. Excelente para la caza de presas muy grandes',
         },
         {
-            name = 'Revolver Doble Acción Jugador',
+            name = 'Revolver Doble Acción decorado',
             item = 'weapon_revolver_doubleaction_gambler',
             amount = 1,
             time = 30000,
             ingredients = {{item = 'wood', amount = 5}},
             requiredLevel = 8,
-            description = 'Doble acción jugador',
+            description = 'Revolver de doble accion con decoraciones de plata',
         },
     },
     tavern = {
