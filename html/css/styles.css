@@ -18,9 +18,9 @@ body {
 /* Contenedor principal */
 .crafting-container {
     width: 80vw;
-    height: 85vh;
+    height: 90vh;
     max-width: 1200px;
-    max-height: 800px;
+    max-height: 900px;
     background: 
         radial-gradient(circle at 20% 80%, rgba(139, 69, 19, 0.3) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(160, 82, 45, 0.3) 0%, transparent 50%),
@@ -180,7 +180,7 @@ body {
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     padding: 0 20px;
-    height: 380px;
+    height: 420px;
     overflow: hidden;
 }
 
@@ -189,7 +189,7 @@ body {
 }
 
 .recipe-card {
-    height: 185px;
+    height: 200px;
 }
 
 .recipe-card {
