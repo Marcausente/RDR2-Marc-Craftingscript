@@ -37,12 +37,12 @@ Config.CraftingStations = {
     },
     {
         name = 'Mesa de Armería - Rhodes',
-        coords = vector3(1327.96, -1322.06, 77.89),
+        coords = vector3(1326.60, -1322.06, 77.89),
         heading = 0.0,
         radius = 2.0,
         enabled = true,
         stationType = 'armory',
-        craftingLevel = 3, -- Nivel de esta estación de crafting
+        craftingLevel = 1, -- Nivel de esta estación de crafting
         blip = {
             label = 'Mesa de Crafting',
             sprite = 'blip_shop_crafting',
