@@ -9,7 +9,7 @@ let playerData = {
 let currentCrafting = null;
 let craftingInterval = null;
 let currentPage = 1;
-const itemsPerPage = 6;
+const itemsPerPage = 4; // 2 columnas x 2 filas
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
@@ -69,7 +69,7 @@ function loadRecipes(recipes) {
 // Actualizar información del jugador
 function updatePlayerInfo() {
     document.getElementById('playerJob').textContent = getJobDisplayName(playerData.job);
-    document.getElementById('stationLevel').textContent = playerData.stationLevel || 1;
+    document.getElementById('stationLevel').textContent = `Nivel ${playerData.stationLevel || 'I'}`;
 }
 
 // Obtener nombre de display del job
@@ -144,45 +144,111 @@ function updatePagination() {
     document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
 }
 
-// Iconos de armas mejorados
-const weaponIcons = {
-    'weapon_revolver_cattleman': '🔫',
-    'weapon_revolver_doubleaction': '🔫',
-    'weapon_revolver_schofield': '🔫',
-    'weapon_revolver_navy': '🔫',
-    'weapon_revolver_lemat': '🔫',
-    'weapon_pistol_volcanic': '🔫',
-    'weapon_pistol_mauser': '🔫',
-    'weapon_pistol_semiauto': '🔫',
-    'weapon_melee_knife': '🔪',
-    'weapon_melee_knife_jawbone': '🔪',
-    'weapon_melee_knife_trader': '🔪',
-    'weapon_melee_knife_rustic': '🔪',
-    'weapon_bow': '🏹',
-    'weapon_bow_improved': '🏹',
-    'weapon_rifle_varmint': '🔫',
-    'weapon_rifle_springfield': '🔫',
-    'weapon_rifle_boltaction': '🔫',
-    'weapon_sniperrifle_rollingblock': '🔫',
-    'weapon_sniperrifle_carcano': '🔫',
-    'weapon_repeater_carbine': '🔫',
-    'weapon_repeater_winchester': '🔫',
-    'weapon_repeater_henry': '🔫',
-    'weapon_repeater_evans': '🔫',
-    'weapon_shotgun_doublebarrel': '🔫',
-    'weapon_shotgun_sawedoff': '🔫',
-    'weapon_shotgun_semiauto': '🔫',
-    'weapon_shotgun_pump': '🔫',
-    'weapon_shotgun_repeating': '🔫',
-    'weapon_thrown_tomahawk': '🪓',
-    'weapon_melee_machete': '🔪',
-    'weapon_melee_hatchet': '🪓',
-    'weapon_melee_cleaver': '🔪'
-};
+// Función para crear iconos SVG de armas realistas
+function createWeaponSVG(type) {
+    const svgs = {
+        'revolver': `
+            <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="metalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#8B7355;stop-opacity:1" />
+                        <stop offset="50%" style="stop-color:#A0826D;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#6B5A47;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <!-- Body -->
+                <ellipse cx="30" cy="25" rx="12" ry="15" fill="url(#metalGrad)" stroke="#654321" stroke-width="2"/>
+                <rect x="18" y="20" width="24" height="8" fill="#654321" rx="2"/>
+                <!-- Cylinder -->
+                <circle cx="30" cy="18" r="6" fill="url(#metalGrad)" stroke="#654321" stroke-width="1"/>
+                <line x1="30" y1="12" x2="30" y2="24" stroke="#654321" stroke-width="1.5"/>
+                <!-- Grip -->
+                <path d="M 18 35 Q 18 45 22 48 Q 18 45 18 35" fill="#8B6F47" stroke="#654321" stroke-width="1.5"/>
+                <path d="M 42 35 Q 42 45 38 48 Q 42 45 42 35" fill="#8B6F47" stroke="#654321" stroke-width="1.5"/>
+                <!-- Barrel -->
+                <rect x="28" y="8" width="4" height="12" fill="url(#metalGrad)" stroke="#654321" stroke-width="1.5" rx="1"/>
+            </svg>
+        `,
+        'rifle': `
+            <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="woodGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#8B7355;stop-opacity:1" />
+                        <stop offset="50%" style="stop-color:#A0826D;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#6B5A47;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <!-- Stock -->
+                <path d="M 5 25 L 5 40 L 20 45 L 20 30 Z" fill="url(#woodGrad)" stroke="#654321" stroke-width="1.5"/>
+                <!-- Barrel -->
+                <rect x="20" y="28" width="32" height="4" fill="#654321" stroke="#8B7355" stroke-width="1"/>
+                <!-- Action -->
+                <rect x="30" y="25" width="12" height="10" fill="#8B7355" stroke="#654321" stroke-width="1.5" rx="1"/>
+                <!-- Sights -->
+                <rect x="48" y="27" width="2" height="6" fill="#654321"/>
+                <rect x="25" y="27" width="2" height="6" fill="#654321"/>
+            </svg>
+        `,
+        'knife': `
+            <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="steelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#C0C0C0;stop-opacity:1" />
+                        <stop offset="50%" style="stop-color:#E0E0E0;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#A0A0A0;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <!-- Blade -->
+                <path d="M 10 15 L 30 5 L 45 35 L 25 45 Z" fill="url(#steelGrad)" stroke="#654321" stroke-width="1.5"/>
+                <!-- Handle -->
+                <path d="M 25 45 L 20 50 L 20 60 L 35 60 L 35 50 L 30 45 Z" fill="#8B6F47" stroke="#654321" stroke-width="1.5"/>
+                <!-- Bolster -->
+                <rect x="28" y="35" width="4" height="10" fill="#654321"/>
+            </svg>
+        `,
+        'bow': `
+            <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <!-- Bow -->
+                <path d="M 20 35 Q 30 10 40 35" fill="none" stroke="#8B6F47" stroke-width="3" stroke-linecap="round"/>
+                <!-- String -->
+                <line x1="20" y1="35" x2="40" y2="35" stroke="#654321" stroke-width="1.5"/>
+                <!-- Arrow shaft -->
+                <line x1="10" y1="35" x2="20" y2="35" stroke="#8B7355" stroke-width="2"/>
+                <!-- Arrowhead -->
+                <path d="M 10 35 L 5 32 L 5 38 Z" fill="#654321"/>
+                <!-- Arrow fletching -->
+                <path d="M 15 33 L 18 32 L 18 38 L 15 37 Z" fill="#8B6F47"/>
+            </svg>
+        `,
+        'hatchet': `
+            <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <!-- Handle -->
+                <rect x="30" y="35" width="20" height="3" fill="#8B6F47" stroke="#654321" stroke-width="1"/>
+                <rect x="45" y="32" width="3" height="8" fill="#8B6F47" stroke="#654321" stroke-width="1"/>
+                <!-- Axe head -->
+                <path d="M 30 35 L 20 25 L 25 15 L 28 18 L 30 35 Z" fill="#C0C0C0" stroke="#654321" stroke-width="2"/>
+                <path d="M 20 25 L 22 22 L 25 25 Z" fill="#8B6F47"/>
+            </svg>
+        `
+    };
+    
+    return svgs[type] || svgs['revolver'];
+}
+
+// Mapear tipos de armas a SVG
+function getWeaponSVGType(itemName) {
+    if (itemName.includes('revolver') || itemName.includes('pistol')) return 'revolver';
+    if (itemName.includes('rifle') || itemName.includes('repeater') || itemName.includes('shotgun') || itemName.includes('sniper')) return 'rifle';
+    if (itemName.includes('knife') || itemName.includes('cleaver') || itemName.includes('machete')) return 'knife';
+    if (itemName.includes('bow')) return 'bow';
+    if (itemName.includes('tomahawk') || itemName.includes('hatchet')) return 'hatchet';
+    return 'revolver';
+}
 
 // Obtener icono de arma
 function getWeaponIcon(itemName) {
-    return weaponIcons[itemName] || '🔫';
+    const type = getWeaponSVGType(itemName);
+    return createWeaponSVG(type);
 }
 
 // Crear tarjeta de receta
@@ -195,11 +261,7 @@ function createRecipeCard(recipe, index) {
     // Todas las recetas mostradas se pueden craftear
     const canCraft = true;
     
-    // Obtener icono del arma
-    const weaponIcon = getWeaponIcon(recipe.item);
-    
     card.innerHTML = `
-        <div class="recipe-icon">${weaponIcon}</div>
         <div class="recipe-header">
             <div class="recipe-name">${recipe.name}</div>
             <div class="recipe-level">Nivel ${recipe.requiredLevel}</div>
@@ -217,7 +279,6 @@ function createRecipeCard(recipe, index) {
             `).join('')}
         </div>
         <div class="recipe-time">
-            <span class="time-icon">⏱️</span>
             <span>Tiempo: ${formatTime(recipe.time)}</span>
         </div>
     `;
