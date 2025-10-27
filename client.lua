@@ -253,6 +253,9 @@ function OpenCraftingUI(playerData, recipes)
     
     isUIOpen = true
     
+    -- Obtener items del inventario para tener los iconos
+    local items = exports['rsg-inventory']:GetItemList()
+    
     -- Abrir NUI
     SetNuiFocus(true, true)
     
@@ -264,6 +267,12 @@ function OpenCraftingUI(playerData, recipes)
     SendNUIMessage({
         type = 'loadRecipes',
         data = recipes
+    })
+    
+    -- Enviar items del inventario para los iconos
+    SendNUIMessage({
+        type = 'loadItems',
+        data = items
     })
     
     -- Mostrar HTML solo cuando se llama explícitamente

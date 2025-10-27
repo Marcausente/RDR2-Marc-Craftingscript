@@ -448,6 +448,15 @@ window.addEventListener('message', function(event) {
         case 'loadRecipes':
             loadRecipes(data.data);
             break;
+        case 'loadItems':
+            // Almacenar items del inventario en una variable global
+            window.inventoryItems = {};
+            if (data.data) {
+                Object.keys(data.data).forEach(itemName => {
+                    window.inventoryItems[itemName] = data.data[itemName];
+                });
+            }
+            break;
         case 'craftingConfirmed':
             // El servidor confirmó que puede comenzar, iniciar la barra de progreso
             console.log('[marc_crafting] Server confirmó crafting, datos:', data);
