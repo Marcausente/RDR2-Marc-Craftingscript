@@ -19,6 +19,14 @@ client_scripts {
     'client.lua',
 }
 
+ui_page 'html/index.html'
+
+files {
+    'html/index.html',
+    'html/css/styles.css',
+    'html/js/app.js',
+}
+
 dependencies {
     'rsg-core',
     'ox_lib',

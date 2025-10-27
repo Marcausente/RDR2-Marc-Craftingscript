@@ -35,8 +35,28 @@ function CanPlayerUseStation(playerId, station)
         return false
     end
     
-    -- Verificar job requerido
-    if station.requiredJob and Player.PlayerData.job.name ~= station.requiredJob then
+    -- Verificar si está desempleado
+    if not Player.PlayerData.job or Player.PlayerData.job.name == 'unemployed' then
+        return false
+    end
+    
+    -- Verificar jobs requeridos
+    if station.requiredJobs and #station.requiredJobs > 0 then
+        local hasRequiredJob = false
+        for _, requiredJob in pairs(station.requiredJobs) do
+            if Player.PlayerData.job.name == requiredJob then
+                hasRequiredJob = true
+                break
+            end
+        end
+        
+        if not hasRequiredJob then
+            return false
+        end
+    end
+    
+    -- Verificar si debe estar de servicio
+    if station.requireDuty and not Player.PlayerData.job.onduty then
         return false
     end
     
@@ -130,7 +150,18 @@ RegisterNetEvent('marc_crafting:server:startCrafting', function(recipe, station)
     
     -- Verificar si puede usar la estación
     if not CanPlayerUseStation(playerId, station) then
-        TriggerClientEvent('marc_crafting:client:craftingFailed', src, Config.Texts.invalidStation)
+        local Player = QBCore.Functions.GetPlayer(playerId)
+        local reason = Config.Texts.invalidStation
+        
+        if not Player or not Player.PlayerData.job or Player.PlayerData.job.name == 'unemployed' then
+            reason = Config.Texts.unemployed
+        elseif station.requireDuty and not Player.PlayerData.job.onduty then
+            reason = Config.Texts.notOnDuty
+        elseif station.requiredJobs and #station.requiredJobs > 0 then
+            reason = Config.Texts.wrongJob
+        end
+        
+        TriggerClientEvent('marc_crafting:client:craftingFailed', src, reason)
         return
     end
     

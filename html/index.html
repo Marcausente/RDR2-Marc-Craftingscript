@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesa de Crafting - Red Dead Redemption</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="crafting-container">
+        <!-- Header con título -->
+        <header class="crafting-header">
+            <div class="header-decoration">
+                <div class="corner left"></div>
+                <div class="corner right"></div>
+            </div>
+            <h1 class="crafting-title">Mesa de Crafting</h1>
+            <p class="crafting-subtitle">Artesanía del Lejano Oeste</p>
+        </header>
+
+        <!-- Información del jugador -->
+        <div class="player-info">
+            <div class="info-card">
+                <div class="info-icon">👤</div>
+                <div class="info-content">
+                    <span class="info-label">Trabajo:</span>
+                    <span class="info-value" id="playerJob">-</span>
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">⭐</div>
+                <div class="info-content">
+                    <span class="info-label">Nivel:</span>
+                    <span class="info-value" id="playerLevel">1</span>
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">⚡</div>
+                <div class="info-content">
+                    <span class="info-label">Experiencia:</span>
+                    <span class="info-value" id="playerExp">0/1000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de recetas -->
+        <div class="recipes-section">
+            <h2 class="section-title">Recetas Disponibles</h2>
+            <div class="recipes-grid" id="recipesGrid">
+                <!-- Las recetas se cargarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Modal de confirmación -->
+        <div class="modal-overlay" id="confirmModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Confirmar Crafting</h3>
+                    <button class="close-btn" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="recipe-preview" id="recipePreview">
+                        <!-- Contenido del preview -->
+                    </div>
+                    <div class="ingredients-list" id="ingredientsList">
+                        <!-- Lista de ingredientes -->
+                    </div>
+                    <div class="crafting-time">
+                        <span class="time-icon">⏱️</span>
+                        <span>Tiempo estimado: <strong id="craftingTime">-</strong></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelCraft">Cancelar</button>
+                    <button class="btn btn-primary" id="confirmCraft">Comenzar Crafting</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="progress-overlay" id="progressOverlay">
+            <div class="progress-container">
+                <div class="progress-header">
+                    <h3 id="progressTitle">Crafting en Progreso</h3>
+                    <button class="cancel-btn" id="cancelProgress">Cancelar</button>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-info">
+                    <span id="progressText">0%</span>
+                    <span id="progressTime">Tiempo restante: -</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón de cerrar -->
+        <button class="close-crafting" id="closeCrafting">
+            <span>&times;</span>
+        </button>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

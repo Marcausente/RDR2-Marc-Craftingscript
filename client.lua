@@ -4,6 +4,7 @@ local isCrafting = false
 local currentCraftingStation = nil
 local craftingProgress = 0
 local craftingTimer = nil
+local isUIOpen = false
 
 -- Inicialización del cliente
 CreateThread(function()
@@ -20,10 +21,26 @@ CreateThread(function()
     CreateCraftingStations()
 end)
 
--- Eventos del core
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+-- Comando de debug para verificar el estado del jugador
+RegisterCommand('craftingdebug', function()
     PlayerData = QBCore.Functions.GetPlayerData()
-end)
+    print('=== DEBUG CRAFTING ===')
+    print('Job:', PlayerData.job and PlayerData.job.name or 'nil')
+    print('OnDuty:', PlayerData.job and PlayerData.job.onduty or 'nil')
+    print('Job Label:', PlayerData.job and PlayerData.job.label or 'nil')
+    print('Job Grade:', PlayerData.job and PlayerData.job.grade or 'nil')
+    print('=====================')
+    
+    lib.notify({
+        title = 'Debug Crafting',
+        description = string.format('Job: %s | OnDuty: %s', 
+            PlayerData.job and PlayerData.job.name or 'nil',
+            PlayerData.job and tostring(PlayerData.job.onduty) or 'nil'
+        ),
+        type = 'inform',
+        duration = 5000,
+    })
+end, false)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     PlayerData = {}
@@ -58,12 +75,14 @@ function CreateCraftingStations()
                     {
                         name = 'crafting_station_' .. station.stationType,
                         icon = 'fas fa-hammer',
-                        label = Config.Texts.interactPrompt,
+                        label = 'Mesa de Crafting',
                         onSelect = function()
-                            OpenCraftingMenu(station)
+                            if CanUseStation(station) then
+                                OpenCraftingMenu(station)
+                            end
                         end,
                         canInteract = function()
-                            return not isCrafting and CanUseStation(station)
+                            return not isCrafting
                         end,
                     }
                 }
@@ -74,8 +93,54 @@ end
 
 -- Verificar si el jugador puede usar la estación
 function CanUseStation(station)
-    -- Verificar job requerido
-    if station.requiredJob and PlayerData.job and PlayerData.job.name ~= station.requiredJob then
+    -- Actualizar PlayerData antes de verificar
+    PlayerData = QBCore.Functions.GetPlayerData()
+    
+    -- Debug: mostrar información del job
+    if Config.Crafting.debug then
+        print('[marc_crafting] Debug - Job actual:', PlayerData.job and PlayerData.job.name or 'nil')
+        print('[marc_crafting] Debug - OnDuty:', PlayerData.job and PlayerData.job.onduty or 'nil')
+        print('[marc_crafting] Debug - Jobs requeridos:', json.encode(station.requiredJobs))
+        print('[marc_crafting] Debug - RequireDuty:', station.requireDuty)
+    end
+    
+    -- Verificar si está desempleado
+    if not PlayerData.job or PlayerData.job.name == 'unemployed' then
+        lib.notify({
+            title = 'Crafting',
+            description = Config.Texts.unemployed,
+            type = Config.Texts.errorType
+        })
+        return false
+    end
+    
+    -- Verificar jobs requeridos
+    if station.requiredJobs and #station.requiredJobs > 0 then
+        local hasRequiredJob = false
+        for _, requiredJob in pairs(station.requiredJobs) do
+            if PlayerData.job.name == requiredJob then
+                hasRequiredJob = true
+                break
+            end
+        end
+        
+        if not hasRequiredJob then
+            lib.notify({
+                title = 'Crafting',
+                description = Config.Texts.wrongJob,
+                type = Config.Texts.errorType
+            })
+            return false
+        end
+    end
+    
+    -- Verificar si debe estar de servicio
+    if station.requireDuty and not PlayerData.job.onduty then
+        lib.notify({
+            title = 'Crafting',
+            description = Config.Texts.notOnDuty,
+            type = Config.Texts.errorType
+        })
         return false
     end
     
@@ -84,6 +149,11 @@ function CanUseStation(station)
         for _, item in pairs(station.requiredItems) do
             local hasItem = QBCore.Functions.HasItem(item.item, item.amount or 1)
             if not hasItem then
+                lib.notify({
+                    title = 'Crafting',
+                    description = 'No tienes los items necesarios para usar esta estación',
+                    type = Config.Texts.errorType
+                })
                 return false
             end
         end
@@ -103,6 +173,10 @@ function OpenCraftingMenu(station)
         return
     end
     
+    if isUIOpen then
+        return
+    end
+    
     currentCraftingStation = station
     local recipes = Config.Recipes[station.stationType] or {}
     
@@ -115,29 +189,78 @@ function OpenCraftingMenu(station)
         return
     end
     
-    -- Crear opciones del menú
-    local menuOptions = {}
+    -- Preparar datos del jugador
+    local playerData = {
+        job = PlayerData.job.name,
+        level = GetPlayerCraftingLevel(),
+        experience = GetPlayerCraftingExperience(),
+        maxExperience = Config.Levels.experiencePerLevel,
+        onDuty = PlayerData.job.onduty
+    }
+    
+    -- Filtrar recetas disponibles
+    local availableRecipes = {}
     for _, recipe in pairs(recipes) do
-        local canCraft = CanCraftRecipe(recipe)
-        local description = CreateRecipeDescription(recipe)
-        
-        table.insert(menuOptions, {
-            title = recipe.name,
-            description = description,
-            disabled = not canCraft,
-            onSelect = function()
-                StartCrafting(recipe)
-            end,
-        })
+        if CanCraftRecipe(recipe) then
+            table.insert(availableRecipes, recipe)
+        end
     end
     
-    lib.registerContext({
-        id = 'crafting_menu',
-        title = station.name,
-        options = menuOptions
+    -- Abrir interfaz HTML
+    OpenCraftingUI(playerData, availableRecipes)
+end
+
+-- Abrir interfaz HTML
+function OpenCraftingUI(playerData, recipes)
+    if isUIOpen then
+        return
+    end
+    
+    isUIOpen = true
+    
+    -- Abrir NUI
+    SetNuiFocus(true, true)
+    
+    SendNUIMessage({
+        type = 'loadPlayerData',
+        data = playerData
     })
     
-    lib.showContext('crafting_menu')
+    SendNUIMessage({
+        type = 'loadRecipes',
+        data = recipes
+    })
+    
+    -- Mostrar HTML solo cuando se llama explícitamente
+    SendNUIMessage({
+        type = 'showUI'
+    })
+end
+
+-- Cerrar interfaz HTML
+function CloseCraftingUI()
+    if not isUIOpen then
+        return
+    end
+    
+    isUIOpen = false
+    SetNuiFocus(false, false)
+    
+    SendNUIMessage({
+        type = 'hideUI'
+    })
+end
+
+-- Obtener nivel de crafting del jugador
+function GetPlayerCraftingLevel()
+    -- TODO: Implementar sistema de niveles persistente
+    return 1
+end
+
+-- Obtener experiencia de crafting del jugador
+function GetPlayerCraftingExperience()
+    -- TODO: Implementar sistema de experiencia persistente
+    return 0
 end
 
 -- Verificar si se puede crear una receta
@@ -242,6 +365,28 @@ function CancelCrafting()
     })
 end
 
+-- Callbacks de NUI
+RegisterNUICallback('closeCrafting', function(data, cb)
+    CloseCraftingUI()
+    cb('ok')
+end)
+
+RegisterNUICallback('startCrafting', function(data, cb)
+    local recipe = json.decode(data)
+    StartCrafting(recipe)
+    cb('ok')
+end)
+
+RegisterNUICallback('cancelCrafting', function(data, cb)
+    CancelCrafting()
+    cb('ok')
+end)
+
+RegisterNUICallback('craftingCompleted', function(data, cb)
+    -- Este callback se puede usar para limpiar el estado si es necesario
+    cb('ok')
+end)
+
 -- Eventos del servidor
 RegisterNetEvent('marc_crafting:client:craftingCompleted', function(recipe)
     isCrafting = false
@@ -250,6 +395,12 @@ RegisterNetEvent('marc_crafting:client:craftingCompleted', function(recipe)
     if craftingTimer then
         craftingTimer = nil
     end
+    
+    -- Notificar a la UI
+    SendNUIMessage({
+        type = 'craftingCompleted',
+        data = recipe
+    })
     
     lib.notify({
         title = 'Crafting',
@@ -265,6 +416,12 @@ RegisterNetEvent('marc_crafting:client:craftingFailed', function(reason)
     if craftingTimer then
         craftingTimer = nil
     end
+    
+    -- Notificar a la UI
+    SendNUIMessage({
+        type = 'craftingFailed',
+        message = reason
+    })
     
     lib.notify({
         title = 'Crafting',

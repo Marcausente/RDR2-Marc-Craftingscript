@@ -18,133 +18,125 @@ Config.Crafting = {
 -- Estaciones de crafting disponibles
 Config.CraftingStations = {
     {
-        name = 'Mesa de Carpintería',
+        name = 'Mesa de Armería - Valentine',
         coords = vector3(-280.0, 780.0, 119.5),
         heading = 0.0,
         radius = 2.0,
         enabled = true,
-        stationType = 'carpentry',
+        stationType = 'armory',
         blip = {
-            label = 'Carpintería',
-            sprite = 'blip_shop_crafting',
-            scale = 0.8,
-            color = 25, -- marrón
-        },
-        requiredJob = nil, -- nil = todos pueden usar
-        requiredItems = {}, -- items necesarios para usar la estación
-    },
-    {
-        name = 'Forja de Herrero',
-        coords = vector3(-275.0, 785.0, 119.5),
-        heading = 90.0,
-        radius = 2.0,
-        enabled = true,
-        stationType = 'blacksmith',
-        blip = {
-            label = 'Herrería',
+            label = 'Mesa de Crafting',
             sprite = 'blip_shop_crafting',
             scale = 0.8,
             color = 1, -- rojo
         },
-        requiredJob = nil,
-        requiredItems = {},
+        requiredJobs = {'vlarmory', 'rharmory'}, -- Jobs que pueden usar esta estación
+        requireDuty = true, -- Requiere estar de servicio
+        requiredItems = {}, -- items necesarios para usar la estación
     },
     {
-        name = 'Mesa de Sastrería',
-        coords = vector3(-285.0, 775.0, 119.5),
-        heading = 180.0,
+        name = 'Mesa de Armería - Rhodes',
+        coords = vector3(1327.96, -1322.06, 77.89),
+        heading = 0.0,
         radius = 2.0,
         enabled = true,
-        stationType = 'tailoring',
+        stationType = 'armory',
         blip = {
-            label = 'Sastrería',
+            label = 'Mesa de Crafting',
             sprite = 'blip_shop_crafting',
             scale = 0.8,
-            color = 2, -- verde
+            color = 1, -- rojo
         },
-        requiredJob = nil,
+        requiredJobs = {'vlarmory', 'rharmory'}, -- Jobs que pueden usar esta estación
+        requireDuty = true, -- Requiere estar de servicio
+        requiredItems = {}, -- items necesarios para usar la estación
+    },
+    {
+        name = 'Mesa de Taberna',
+        coords = vector3(-275.0, 785.0, 119.5),
+        heading = 90.0,
+        radius = 2.0,
+        enabled = true,
+        stationType = 'tavern',
+        blip = {
+            label = 'Mesa de Crafting',
+            sprite = 'blip_shop_crafting',
+            scale = 0.8,
+            color = 25, -- marrón
+        },
+        requiredJobs = {'taberna'}, -- Jobs que pueden usar esta estación
+        requireDuty = true, -- Requiere estar de servicio
         requiredItems = {},
     },
 }
 
 -- Recetas de crafting por tipo de estación
 Config.Recipes = {
-    carpentry = {
+    armory = {
         {
-            name = 'Tabla de Madera',
-            item = 'wooden_table',
+            name = 'Cattleman Revolver',
+            item = 'weapon_revolver_cattleman',
+            amount = 1,
+            time = 45000, -- 45 segundos
+            ingredients = {
+                {item = 'wood', amount = 5},
+            },
+            requiredLevel = 1,
+            experience = 15,
+            description = 'Revolver básico para defensa personal',
+        },
+        {
+            name = 'Schofield Revolver',
+            item = 'weapon_revolver_schofield',
+            amount = 1,
+            time = 60000, -- 60 segundos
+            ingredients = {
+                {item = 'wood', amount = 10},
+            },
+            requiredLevel = 2,
+            experience = 25,
+            description = 'Revolver de alta calidad con mejor precisión',
+        },
+        {
+            name = 'Lancaster Repeater',
+            item = 'weapon_repeater_lancaster',
+            amount = 1,
+            time = 90000, -- 90 segundos
+            ingredients = {
+                {item = 'wood', amount = 15},
+                {item = 'iron_ingot', amount = 3},
+            },
+            requiredLevel = 3,
+            experience = 40,
+            description = 'Rifle de repetición para caza mayor',
+        },
+    },
+    tavern = {
+        {
+            name = 'Botella de Whiskey',
+            item = 'whiskey',
             amount = 1,
             time = 30000, -- 30 segundos
             ingredients = {
-                {item = 'wood', amount = 5},
-                {item = 'nails', amount = 10},
+                {item = 'grain', amount = 3},
+                {item = 'water', amount = 2},
             },
             requiredLevel = 1,
             experience = 10,
+            description = 'Whiskey artesanal de la taberna',
         },
         {
-            name = 'Silla de Madera',
-            item = 'wooden_chair',
+            name = 'Cerveza Artesanal',
+            item = 'beer',
             amount = 1,
-            time = 20000,
+            time = 25000, -- 25 segundos
             ingredients = {
-                {item = 'wood', amount = 3},
-                {item = 'nails', amount = 5},
+                {item = 'hops', amount = 2},
+                {item = 'water', amount = 1},
             },
             requiredLevel = 1,
             experience = 8,
-        },
-    },
-    blacksmith = {
-        {
-            name = 'Espada Básica',
-            item = 'basic_sword',
-            amount = 1,
-            time = 45000,
-            ingredients = {
-                {item = 'iron_ingot', amount = 2},
-                {item = 'coal', amount = 3},
-            },
-            requiredLevel = 2,
-            experience = 15,
-        },
-        {
-            name = 'Herramienta de Reparación',
-            item = 'repair_tool',
-            amount = 1,
-            time = 25000,
-            ingredients = {
-                {item = 'iron_ingot', amount = 1},
-                {item = 'wood', amount = 1},
-            },
-            requiredLevel = 1,
-            experience = 12,
-        },
-    },
-    tailoring = {
-        {
-            name = 'Camisa de Lino',
-            item = 'linen_shirt',
-            amount = 1,
-            time = 35000,
-            ingredients = {
-                {item = 'linen_cloth', amount = 2},
-                {item = 'thread', amount = 5},
-            },
-            requiredLevel = 1,
-            experience = 10,
-        },
-        {
-            name = 'Chaleco de Cuero',
-            item = 'leather_vest',
-            amount = 1,
-            time = 40000,
-            ingredients = {
-                {item = 'leather', amount = 3},
-                {item = 'thread', amount = 8},
-            },
-            requiredLevel = 2,
-            experience = 15,
+            description = 'Cerveza fresca de barril',
         },
     },
 }
@@ -159,7 +151,7 @@ Config.Levels = {
 -- Textos utilizados en la UI/notificaciones
 Config.Texts = {
     -- Prompts de interacción
-    interactPrompt = 'E - Usar estación de crafting',
+    interactPrompt = 'E - Usar mesa de crafting',
     craftingPrompt = 'E - Comenzar crafting',
     cancelPrompt = 'Escape - Cancelar',
     
@@ -171,15 +163,21 @@ Config.Texts = {
     notEnoughLevel = 'No tienes el nivel suficiente para esta receta',
     stationInUse = 'Esta estación está siendo usada por otro jugador',
     invalidStation = 'Estación de crafting no válida',
+    wrongJob = 'No tienes el trabajo correcto para usar esta mesa',
+    notOnDuty = 'Debes estar de servicio para usar esta mesa',
+    unemployed = 'Los desempleados no pueden usar las mesas de crafting',
     
     -- UI
-    craftingMenu = 'Menú de Crafting',
+    craftingMenu = 'Mesa de Crafting',
     selectRecipe = 'Selecciona una receta',
     ingredients = 'Ingredientes necesarios:',
     timeRemaining = 'Tiempo restante: %s',
     progress = 'Progreso: %d%%',
     level = 'Nivel: %d',
     experience = 'Experiencia: %d/%d',
+    description = 'Descripción: %s',
+    requiredJob = 'Trabajo requerido: %s',
+    onDuty = 'Debes estar de servicio',
     
     -- Tipos de notificaciones
     successType = 'success',
