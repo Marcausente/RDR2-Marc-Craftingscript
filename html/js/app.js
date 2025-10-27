@@ -144,6 +144,37 @@ function updatePagination() {
     document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
 }
 
+// Iconos de armas
+const weaponIcons = {
+    'weapon_revolver_cattleman': '🔫',
+    'weapon_revolver_doubleaction': '🔫',
+    'weapon_revolver_schofield': '🔫',
+    'weapon_revolver_navy': '🔫',
+    'weapon_pistol_volcanic': '🔫',
+    'weapon_pistol_mauser': '🔫',
+    'weapon_pistol_semiauto': '🔫',
+    'weapon_melee_knife_john': '🔪',
+    'weapon_melee_knife_vampire': '🔪',
+    'weapon_melee_knife_rustic': '🔪',
+    'weapon_bow': '🏹',
+    'weapon_rifle_varmint': '🔫',
+    'weapon_rifle_boltaction': '🔫',
+    'weapon_sniperrifle_carcano': '🔫',
+    'weapon_repeater_carbine': '🔫',
+    'weapon_repeater_lancaster': '🔫',
+    'weapon_repeater_evans': '🔫',
+    'weapon_shotgun_doublebarrel': '🔫',
+    'weapon_shotgun_pump': '🔫',
+    'weapon_throwable_tomahawk': '🪓',
+    'weapon_melee_machete': '🔪',
+    'weapon_melee_hatchet': '🪓'
+};
+
+// Obtener icono de arma
+function getWeaponIcon(itemName) {
+    return weaponIcons[itemName] || '🔫';
+}
+
 // Crear tarjeta de receta
 function createRecipeCard(recipe, index) {
     const card = document.createElement('div');
@@ -154,7 +185,11 @@ function createRecipeCard(recipe, index) {
     // Todas las recetas mostradas se pueden craftear
     const canCraft = true;
     
+    // Obtener icono del arma
+    const weaponIcon = getWeaponIcon(recipe.item);
+    
     card.innerHTML = `
+        <div class="recipe-icon">${weaponIcon}</div>
         <div class="recipe-header">
             <div class="recipe-name">${recipe.name}</div>
             <div class="recipe-level">Nivel ${recipe.requiredLevel}</div>
