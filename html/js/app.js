@@ -144,35 +144,15 @@ function updatePagination() {
     document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
 }
 
-// Iconos de armas
-const weaponIcons = {
-    'weapon_revolver_cattleman': '🔫',
-    'weapon_revolver_doubleaction': '🔫',
-    'weapon_revolver_schofield': '🔫',
-    'weapon_revolver_navy': '🔫',
-    'weapon_pistol_volcanic': '🔫',
-    'weapon_pistol_mauser': '🔫',
-    'weapon_pistol_semiauto': '🔫',
-    'weapon_melee_knife_john': '🔪',
-    'weapon_melee_knife_vampire': '🔪',
-    'weapon_melee_knife_rustic': '🔪',
-    'weapon_bow': '🏹',
-    'weapon_rifle_varmint': '🔫',
-    'weapon_rifle_boltaction': '🔫',
-    'weapon_sniperrifle_carcano': '🔫',
-    'weapon_repeater_carbine': '🔫',
-    'weapon_repeater_lancaster': '🔫',
-    'weapon_repeater_evans': '🔫',
-    'weapon_shotgun_doublebarrel': '🔫',
-    'weapon_shotgun_pump': '🔫',
-    'weapon_throwable_tomahawk': '🪓',
-    'weapon_melee_machete': '🔪',
-    'weapon_melee_hatchet': '🪓'
-};
-
-// Obtener icono de arma
+// Obtener icono de arma desde el sistema de items
 function getWeaponIcon(itemName) {
-    return weaponIcons[itemName] || '🔫';
+    // Buscar en el inventario si existe
+    const itemData = window.inventoryItems ? window.inventoryItems[itemName] : null;
+    if (itemData && itemData.image) {
+        return `<img src="nui://rsg-inventory/html/images/${itemData.image}" style="width: 60px; height: 60px; object-fit: contain;" />`;
+    }
+    // Fallback a emoji
+    return '🔫';
 }
 
 // Crear tarjeta de receta
