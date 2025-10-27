@@ -373,6 +373,12 @@ function StartCraftingProgress(recipe)
     craftingProgress = 0
     local startTime = GetGameTimer()
     local duration = recipe.time
+    local animationCount = 0
+    local animationInterval = duration / 6 -- Dividir el tiempo en 6 partes iguales
+    
+    -- Ejecutar primera animación inmediatamente
+    PlayCraftingAnimation()
+    animationCount = animationCount + 1
     
     craftingTimer = CreateThread(function()
         while isCrafting do
@@ -380,12 +386,39 @@ function StartCraftingProgress(recipe)
             local elapsed = currentTime - startTime
             craftingProgress = math.min(elapsed / duration, 1.0)
             
+            -- Ejecutar animación cada vez que se alcance un intervalo
+            if animationCount < 6 and elapsed >= (animationCount * animationInterval) then
+                PlayCraftingAnimation()
+                animationCount = animationCount + 1
+            end
+            
             if craftingProgress >= 1.0 then
                 break
             end
             
             Wait(100)
         end
+    end)
+end
+
+-- Ejecutar animación de crafting
+function PlayCraftingAnimation()
+    local playerPed = PlayerPedId()
+    
+    -- Detener cualquier animación actual
+    ClearPedTasksImmediately(playerPed)
+    
+    -- Ejecutar la animación KIT_EMOTE_ACTION_LETS_CRAFT_1
+    RequestAnimDict("script_em@crafting@lets_craft")
+    while not HasAnimDictLoaded("script_em@crafting@lets_craft") do
+        Wait(10)
+    end
+    
+    TaskPlayAnim(playerPed, "script_em@crafting@lets_craft", "KIT_EMOTE_ACTION_LETS_CRAFT_1", 8.0, -8.0, -1, 0, 0, false, false, false)
+    
+    -- Limpiar el diccionario después de un tiempo
+    SetTimeout(5000, function()
+        RemoveAnimDict("script_em@crafting@lets_craft")
     end)
 end
 
@@ -401,6 +434,10 @@ function CancelCrafting()
     if craftingTimer then
         craftingTimer = nil
     end
+    
+    -- Limpiar animaciones al cancelar
+    local playerPed = PlayerPedId()
+    ClearPedTasksImmediately(playerPed)
     
     TriggerServerEvent('marc_crafting:server:cancelCrafting')
     
@@ -493,6 +530,10 @@ RegisterNetEvent('marc_crafting:client:craftingCompleted', function(recipe)
         craftingTimer = nil
     end
     
+    -- Limpiar animaciones al completar
+    local playerPed = PlayerPedId()
+    ClearPedTasksImmediately(playerPed)
+    
     -- Notificar a la UI
     SendNUIMessage({
         type = 'craftingCompleted',
@@ -514,6 +555,10 @@ RegisterNetEvent('marc_crafting:client:craftingFailed', function(reason)
     if craftingTimer then
         craftingTimer = nil
     end
+    
+    -- Limpiar animaciones al fallar
+    local playerPed = PlayerPedId()
+    ClearPedTasksImmediately(playerPed)
     
     -- Notificar a la UI
     SendNUIMessage({
