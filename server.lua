@@ -88,11 +88,7 @@ function CanPlayerCraftRecipe(playerId, recipe)
         end
     end
     
-    -- Verificar nivel requerido
-    local playerLevel = GetPlayerCraftingLevel(playerId)
-    if recipe.requiredLevel and playerLevel < recipe.requiredLevel then
-        return false
-    end
+    -- Verificación de nivel eliminada - las recetas ya vienen filtradas por nivel en el cliente
     
     return true
 end
