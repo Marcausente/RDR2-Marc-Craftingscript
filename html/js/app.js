@@ -3,8 +3,6 @@ let currentRecipes = [];
 let playerData = {
     job: 'unemployed',
     level: 1,
-    experience: 0,
-    maxExperience: 1000,
     onDuty: false
 };
 
@@ -65,8 +63,7 @@ function loadRecipes(recipes) {
 // Actualizar información del jugador
 function updatePlayerInfo() {
     document.getElementById('playerJob').textContent = getJobDisplayName(playerData.job);
-    document.getElementById('playerLevel').textContent = playerData.level;
-    document.getElementById('playerExp').textContent = `${playerData.experience}/${playerData.maxExperience}`;
+    document.getElementById('stationLevel').textContent = playerData.stationLevel || 1;
 }
 
 // Obtener nombre de display del job
@@ -221,20 +218,31 @@ function closeModal() {
 
 // Confirmar crafting
 function confirmCrafting() {
-    if (!currentCrafting) return;
+    if (!currentCrafting) {
+        console.error('currentCrafting es null');
+        return;
+    }
+    
+    // Guardar la receta antes de cerrar el modal
+    const recipeToCraft = currentCrafting;
     
     closeModal();
-    startCraftingProgress(currentCrafting);
     
-    // Enviar al cliente Lua
+    console.log('Enviando receta al servidor:', recipeToCraft);
+    
+    // NO iniciar la barra de progreso aquí, esperar confirmación del servidor
+    // Solo enviar al cliente Lua y esperar su respuesta
     fetch(`https://${GetParentResourceName()}/startCrafting`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: JSON.stringify(currentCrafting)
-    }).then(resp => resp.json()).then(resp => {
-        // Callback completado
+        body: JSON.stringify(recipeToCraft)
+    }).then(resp => {
+        console.log('Respuesta recibida:', resp);
+        return resp.json();
+    }).then(resp => {
+        console.log('Callback completado:', resp);
     }).catch(err => {
         console.error('Error al iniciar crafting:', err);
     });
@@ -389,6 +397,14 @@ window.addEventListener('message', function(event) {
         case 'loadRecipes':
             loadRecipes(data.data);
             break;
+        case 'craftingConfirmed':
+            // El servidor confirmó que puede comenzar, iniciar la barra de progreso
+            console.log('[marc_crafting] Server confirmó crafting, datos:', data);
+            if (data.data) {
+                // Usar la receta enviada por el servidor
+                startCraftingProgress(data.data);
+            }
+            break;
         case 'craftingCompleted':
             completeCrafting();
             break;
@@ -399,6 +415,7 @@ window.addEventListener('message', function(event) {
             }
             document.getElementById('progressOverlay').classList.remove('active');
             showNotification(data.message, 'error');
+            currentCrafting = null;
             break;
     }
 });

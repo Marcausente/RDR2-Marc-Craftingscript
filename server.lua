@@ -169,9 +169,30 @@ RegisterNetEvent('marc_crafting:server:startCrafting', function(recipe, station)
     if not CanPlayerCraftRecipe(playerId, recipe) then
         local reason = Config.Texts.notEnoughIngredients
         local playerLevel = GetPlayerCraftingLevel(playerId)
+        
+        -- Debug: verificar qué ingrediente falta
+        local Player = QBCore.Functions.GetPlayer(playerId)
+        if Player then
+            for _, ingredient in pairs(recipe.ingredients) do
+                local hasItem = Player.Functions.GetItemByName(ingredient.item)
+                local hasEnough = hasItem and hasItem.amount >= ingredient.amount
+                print(string.format('[marc_crafting] Debug - Item: %s, Requerido: %d, Tiene: %s', 
+                    ingredient.item, 
+                    ingredient.amount,
+                    hasItem and tostring(hasItem.amount) or '0'
+                ))
+                if not hasEnough then
+                    reason = string.format('No tienes suficiente %s (necesitas %d)', ingredient.item, ingredient.amount)
+                    break
+                end
+            end
+        end
+        
         if recipe.requiredLevel and playerLevel < recipe.requiredLevel then
             reason = Config.Texts.notEnoughLevel
         end
+        
+        print(string.format('[marc_crafting] Crafting falló: %s', reason))
         TriggerClientEvent('marc_crafting:client:craftingFailed', src, reason)
         return
     end
@@ -183,6 +204,9 @@ RegisterNetEvent('marc_crafting:server:startCrafting', function(recipe, station)
         startTime = os.time(),
         timer = recipe.time
     }
+    
+    -- Confirmar al cliente que puede comenzar el crafting (enviar también la receta)
+    TriggerClientEvent('marc_crafting:client:craftingConfirmed', src, recipe)
     
     -- Programar finalización del crafting
     SetTimeout(recipe.time, function()
@@ -231,11 +255,6 @@ function CompleteCrafting(playerId)
         TriggerClientEvent('marc_crafting:client:craftingFailed', playerId, 'Error al dar el item creado')
         activeCrafting[playerId] = nil
         return
-    end
-    
-    -- Agregar experiencia
-    if crafting.recipe.experience then
-        AddCraftingExperience(playerId, crafting.recipe.experience)
     end
     
     -- Notificar éxito

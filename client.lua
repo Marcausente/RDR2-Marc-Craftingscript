@@ -2,6 +2,7 @@ local QBCore = exports['rsg-core']:GetCoreObject()
 local PlayerData = {}
 local isCrafting = false
 local currentCraftingStation = nil
+local currentCraftingRecipe = nil
 local craftingProgress = 0
 local craftingTimer = nil
 local isUIOpen = false
@@ -203,7 +204,18 @@ function OpenCraftingMenu(station)
     end
     
     currentCraftingStation = station
-    local recipes = Config.Recipes[station.stationType] or {}
+    local allRecipes = Config.Recipes[station.stationType] or {}
+    
+    -- Filtrar recetas según el nivel de la estación
+    local stationLevel = station.craftingLevel or 1
+    local recipes = {}
+    
+    for _, recipe in pairs(allRecipes) do
+        -- Solo mostrar recetas que el nivel de la estación puede craftear
+        if recipe.requiredLevel <= stationLevel then
+            table.insert(recipes, recipe)
+        end
+    end
     
     if #recipes == 0 then
         lib.notify({
@@ -218,19 +230,16 @@ function OpenCraftingMenu(station)
     local playerData = {
         job = PlayerData.job.name,
         level = GetPlayerCraftingLevel(),
-        experience = GetPlayerCraftingExperience(),
-        maxExperience = Config.Levels.experiencePerLevel,
-        onDuty = PlayerData.job.onduty
+        onDuty = PlayerData.job.onduty,
+        stationLevel = stationLevel -- Pasar el nivel de la estación a la UI
     }
     
     -- Debug: mostrar información de las recetas
-    print('[marc_crafting] Debug - Total recetas encontradas:', #recipes)
+    print('[marc_crafting] Debug - Nivel de estación:', stationLevel)
+    print('[marc_crafting] Debug - Recetas filtradas:', #recipes)
     for i, recipe in pairs(recipes) do
-        print('[marc_crafting] Debug - Receta', i, ':', recipe.name)
+        print('[marc_crafting] Debug - Receta', i, ':', recipe.name, 'Req:', recipe.requiredLevel)
     end
-    
-    -- Mostrar todas las recetas disponibles (no filtrar por ingredientes)
-    -- El JavaScript se encargará de mostrar si se puede crear o no
     
     -- Abrir interfaz HTML
     OpenCraftingUI(playerData, recipes)
@@ -328,29 +337,40 @@ end
 
 -- Iniciar proceso de crafting
 function StartCrafting(recipe)
+    if not recipe then
+        print('[marc_crafting] Error: recipe es nil en StartCrafting')
+        return
+    end
+    
     if isCrafting then
         return
     end
     
     isCrafting = true
-    craftingProgress = 0
+    currentCraftingRecipe = recipe
     
     -- Notificar inicio
-    lib.notify({
-        title = 'Crafting',
-        description = string.format(Config.Texts.craftingStarted, recipe.name),
-        type = Config.Texts.infoType
-    })
+    if recipe.name then
+        lib.notify({
+            title = 'Crafting',
+            description = string.format(Config.Texts.craftingStarted, recipe.name),
+            type = Config.Texts.infoType
+        })
+    end
     
     -- Enviar al servidor para verificar ingredientes y comenzar crafting
     TriggerServerEvent('marc_crafting:server:startCrafting', recipe, currentCraftingStation)
     
-    -- Iniciar barra de progreso
-    StartCraftingProgress(recipe)
+    -- NO iniciar la barra de progreso aquí, esperar confirmación del servidor
 end
 
 -- Iniciar barra de progreso
 function StartCraftingProgress(recipe)
+    if not recipe then
+        return
+    end
+    
+    craftingProgress = 0
     local startTime = GetGameTimer()
     local duration = recipe.time
     
@@ -398,9 +418,24 @@ RegisterNUICallback('closeCrafting', function(data, cb)
 end)
 
 RegisterNUICallback('startCrafting', function(data, cb)
-    local recipe = json.decode(data)
-    StartCrafting(recipe)
-    cb('ok')
+    print('[marc_crafting] Debug - startCrafting callback recibido:', json.encode(data))
+    
+    local recipe
+    if type(data) == 'string' then
+        recipe = json.decode(data)
+    else
+        recipe = data
+    end
+    
+    print('[marc_crafting] Debug - recipe decodificado:', json.encode(recipe))
+    
+    if recipe then
+        StartCrafting(recipe)
+        cb('ok')
+    else
+        print('[marc_crafting] Error: recipe es nil en callback startCrafting')
+        cb('error')
+    end
 end)
 
 RegisterNUICallback('cancelCrafting', function(data, cb)
@@ -414,14 +449,44 @@ RegisterNUICallback('craftingCompleted', function(data, cb)
 end)
 
 RegisterNUICallback('checkIngredient', function(data, cb)
-    local ingredient = json.decode(data)
-    local hasItem = QBCore.Functions.HasItem(ingredient.item, ingredient.amount)
-    cb(hasItem)
+    local ingredient
+    if type(data) == 'string' then
+        ingredient = json.decode(data)
+    else
+        ingredient = data
+    end
+    
+    if ingredient and ingredient.item then
+        local hasItem = QBCore.Functions.HasItem(ingredient.item, ingredient.amount)
+        cb(hasItem)
+    else
+        cb(false)
+    end
 end)
 
 -- Eventos del servidor
+-- Evento cuando el servidor confirma que puede comenzar el crafting
+RegisterNetEvent('marc_crafting:client:craftingConfirmed', function(recipe)
+    print('[marc_crafting] Crafting confirmado por servidor, receta:', recipe and recipe.name or 'nil')
+    
+    -- Guardar la receta confirmada
+    if recipe then
+        currentCraftingRecipe = recipe
+    end
+    
+    -- Notificar a la UI de JavaScript
+    SendNUIMessage({
+        type = 'craftingConfirmed',
+        data = recipe
+    })
+    
+    -- Iniciar la barra de progreso en el cliente
+    StartCraftingProgress(currentCraftingRecipe)
+end)
+
 RegisterNetEvent('marc_crafting:client:craftingCompleted', function(recipe)
     isCrafting = false
+    currentCraftingRecipe = nil
     craftingProgress = 0
     
     if craftingTimer then
@@ -443,6 +508,7 @@ end)
 
 RegisterNetEvent('marc_crafting:client:craftingFailed', function(reason)
     isCrafting = false
+    currentCraftingRecipe = nil
     craftingProgress = 0
     
     if craftingTimer then
@@ -466,10 +532,6 @@ end)
 CreateThread(function()
     while true do
         if isCrafting then
-            -- Mostrar progreso en pantalla
-            local progressText = string.format(Config.Texts.progress, math.floor(craftingProgress * 100))
-            DrawText2D(progressText, 0.5, 0.8, 0.5, 255, 255, 255, 255)
-            
             -- Permitir cancelar con Escape
             if IsControlJustPressed(0, 322) then -- Escape key
                 CancelCrafting()
@@ -480,17 +542,6 @@ CreateThread(function()
     end
 end)
 
--- Función para dibujar texto en pantalla
-function DrawText2D(text, x, y, scale, r, g, b, a)
-    SetTextFont(4)
-    SetTextProportional(1)
-    SetTextScale(scale, scale)
-    SetTextColour(r, g, b, a)
-    SetTextDropShadow(0, 0, 0, 0, 255)
-    SetTextEdge(1, 0, 0, 0, 255)
-    SetTextDropShadow()
-    SetTextOutline()
-    SetTextEntry("STRING")
-    AddTextComponentString(text)
-    DrawText(x, y)
-end
+-- Función para dibujar texto en pantalla (no usada, usando lib.showTextUI en su lugar)
+-- function DrawText2D(text, x, y, scale, r, g, b, a)
+-- end
