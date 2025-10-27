@@ -102,10 +102,9 @@ function createRecipeCard(recipe, index) {
     card.className = 'recipe-card';
     card.style.animationDelay = `${index * 0.1}s`;
     
-    const canCraft = canCraftRecipe(recipe);
-    if (!canCraft) {
-        card.classList.add('disabled');
-    }
+    // Las recetas ya vienen filtradas por nivel de estación desde el servidor
+    // Todas las recetas mostradas se pueden craftear
+    const canCraft = true;
     
     card.innerHTML = `
         <div class="recipe-header">
@@ -130,27 +129,16 @@ function createRecipeCard(recipe, index) {
         </div>
     `;
     
-    if (canCraft) {
-        card.addEventListener('click', () => showConfirmModal(recipe));
-    }
+    // Todas las recetas mostradas se pueden craftear
+    card.addEventListener('click', () => showConfirmModal(recipe));
     
     return card;
 }
 
-// Verificar si se puede crear la receta
+// Verificar si se puede crear la receta (ya no necesario, las recetas ya vienen filtradas)
 function canCraftRecipe(recipe) {
-    // Verificar nivel
-    if (playerData.level < recipe.requiredLevel) {
-        return false;
-    }
-    
-    // Verificar ingredientes
-    for (const ingredient of recipe.ingredients) {
-        if (!hasIngredient(ingredient)) {
-            return false;
-        }
-    }
-    
+    // Las recetas ya están filtradas por el servidor según el nivel de la estación
+    // Solo verificar ingredientes en el momento del crafting
     return true;
 }
 
