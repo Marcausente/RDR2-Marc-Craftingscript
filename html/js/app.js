@@ -9,7 +9,7 @@ let playerData = {
 let currentCrafting = null;
 let craftingInterval = null;
 let currentPage = 1;
-const itemsPerPage = 4; // 2 columnas x 2 filas
+const itemsPerPage = 6; // 2 columnas x 3 filas
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
