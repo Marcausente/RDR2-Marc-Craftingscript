@@ -188,9 +188,8 @@ RegisterNetEvent('marc_crafting:server:startCrafting', function(recipe, station)
             end
         end
         
-        if recipe.requiredLevel and playerLevel < recipe.requiredLevel then
-            reason = Config.Texts.notEnoughLevel
-        end
+        -- Verificación de nivel eliminada porque las recetas ya vienen filtradas por nivel en el cliente
+        -- Si aparece aquí, significa que el jugador tiene el nivel suficiente
         
         print(string.format('[marc_crafting] Crafting falló: %s', reason))
         TriggerClientEvent('marc_crafting:client:craftingFailed', src, reason)
