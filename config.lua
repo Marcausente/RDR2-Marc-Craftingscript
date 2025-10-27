@@ -77,7 +77,7 @@ Config.Recipes = {
             name = 'Cattleman Revolver',
             item = 'weapon_revolver_cattleman',
             amount = 1,
-            time = 45000, -- 45 segundos
+            time = 30000, -- 30 segundos
             ingredients = {
                 {item = 'wood', amount = 5},
             },
@@ -89,26 +89,13 @@ Config.Recipes = {
             name = 'Schofield Revolver',
             item = 'weapon_revolver_schofield',
             amount = 1,
-            time = 60000, -- 60 segundos
+            time = 45000, -- 45 segundos
             ingredients = {
                 {item = 'wood', amount = 10},
             },
-            requiredLevel = 2,
+            requiredLevel = 1,
             experience = 25,
             description = 'Revolver de alta calidad con mejor precisión',
-        },
-        {
-            name = 'Lancaster Repeater',
-            item = 'weapon_repeater_lancaster',
-            amount = 1,
-            time = 90000, -- 90 segundos
-            ingredients = {
-                {item = 'wood', amount = 15},
-                {item = 'iron_ingot', amount = 3},
-            },
-            requiredLevel = 3,
-            experience = 40,
-            description = 'Rifle de repetición para caza mayor',
         },
     },
     tavern = {

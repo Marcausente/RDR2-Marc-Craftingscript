@@ -42,6 +42,31 @@ RegisterCommand('craftingdebug', function()
     })
 end, false)
 
+-- Comando para probar las recetas directamente
+RegisterCommand('testrecipes', function()
+    local recipes = Config.Recipes['armory'] or {}
+    print('[marc_crafting] Debug - Recetas de armory:', #recipes)
+    for i, recipe in pairs(recipes) do
+        print('[marc_crafting] Debug - Receta', i, ':', recipe.name)
+    end
+    
+    -- Simular apertura de interfaz
+    local playerData = {
+        job = PlayerData.job and PlayerData.job.name or 'unemployed',
+        level = 1,
+        experience = 0,
+        maxExperience = 1000,
+        onDuty = PlayerData.job and PlayerData.job.onduty or false
+    }
+    
+    OpenCraftingUI(playerData, recipes)
+end, false)
+
+-- Comando para dar wood para testing
+RegisterCommand('givewood', function()
+    TriggerServerEvent('marc_crafting:server:giveWood')
+end, false)
+
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     PlayerData = {}
 end)
@@ -114,7 +139,7 @@ function CanUseStation(station)
         return false
     end
     
-    -- Verificar jobs requeridos
+    -- Verificar jobs requeridos (cualquier job de armería)
     if station.requiredJobs and #station.requiredJobs > 0 then
         local hasRequiredJob = false
         for _, requiredJob in pairs(station.requiredJobs) do
@@ -127,7 +152,7 @@ function CanUseStation(station)
         if not hasRequiredJob then
             lib.notify({
                 title = 'Crafting',
-                description = Config.Texts.wrongJob,
+                description = 'Solo los armeros pueden usar esta mesa de crafting',
                 type = Config.Texts.errorType
             })
             return false
@@ -198,16 +223,17 @@ function OpenCraftingMenu(station)
         onDuty = PlayerData.job.onduty
     }
     
-    -- Filtrar recetas disponibles
-    local availableRecipes = {}
-    for _, recipe in pairs(recipes) do
-        if CanCraftRecipe(recipe) then
-            table.insert(availableRecipes, recipe)
-        end
+    -- Debug: mostrar información de las recetas
+    print('[marc_crafting] Debug - Total recetas encontradas:', #recipes)
+    for i, recipe in pairs(recipes) do
+        print('[marc_crafting] Debug - Receta', i, ':', recipe.name)
     end
     
+    -- Mostrar todas las recetas disponibles (no filtrar por ingredientes)
+    -- El JavaScript se encargará de mostrar si se puede crear o no
+    
     -- Abrir interfaz HTML
-    OpenCraftingUI(playerData, availableRecipes)
+    OpenCraftingUI(playerData, recipes)
 end
 
 -- Abrir interfaz HTML
@@ -385,6 +411,12 @@ end)
 RegisterNUICallback('craftingCompleted', function(data, cb)
     -- Este callback se puede usar para limpiar el estado si es necesario
     cb('ok')
+end)
+
+RegisterNUICallback('checkIngredient', function(data, cb)
+    local ingredient = json.decode(data)
+    local hasItem = QBCore.Functions.HasItem(ingredient.item, ingredient.amount)
+    cb(hasItem)
 end)
 
 -- Eventos del servidor

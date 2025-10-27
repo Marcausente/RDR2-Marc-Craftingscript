@@ -278,6 +278,17 @@ AddEventHandler('playerDropped', function(reason)
     end
 end)
 
+-- Comando para dar wood para testing
+RegisterNetEvent('marc_crafting:server:giveWood', function()
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
+    
+    Player.Functions.AddItem('wood', 20)
+    TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['wood'], 'add')
+    TriggerClientEvent('QBCore:Notify', src, 'Se te han dado 20 unidades de wood para testing', 'success')
+end)
+
 -- Exportar funciones para otros recursos
 exports('GetPlayerCraftingLevel', GetPlayerCraftingLevel)
 exports('GetPlayerCraftingExperience', GetPlayerCraftingExperience)

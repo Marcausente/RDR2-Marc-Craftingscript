@@ -55,6 +55,9 @@ function loadPlayerData(data) {
 
 // Cargar recetas
 function loadRecipes(recipes) {
+    console.log('[marc_crafting] Debug - Recetas recibidas:', recipes);
+    console.log('[marc_crafting] Debug - Cantidad de recetas:', recipes.length);
+    
     currentRecipes = recipes;
     renderRecipes();
 }
@@ -79,10 +82,18 @@ function getJobDisplayName(job) {
 
 // Renderizar recetas
 function renderRecipes() {
+    console.log('[marc_crafting] Debug - Renderizando recetas:', currentRecipes);
+    
     const grid = document.getElementById('recipesGrid');
     grid.innerHTML = '';
     
+    if (currentRecipes.length === 0) {
+        grid.innerHTML = '<div style="text-align: center; color: #D2B48C; padding: 20px;">No hay recetas disponibles</div>';
+        return;
+    }
+    
     currentRecipes.forEach((recipe, index) => {
+        console.log('[marc_crafting] Debug - Creando tarjeta para receta:', recipe.name);
         const recipeCard = createRecipeCard(recipe, index);
         grid.appendChild(recipeCard);
     });
@@ -148,8 +159,8 @@ function canCraftRecipe(recipe) {
 
 // Verificar si tiene el ingrediente
 function hasIngredient(ingredient) {
-    // Esta función se implementará cuando conectemos con el inventario
-    // Por ahora retornamos true para testing
+    // Por ahora retornamos true, pero se puede implementar verificación real
+    // usando el callback 'checkIngredient' si es necesario
     return true;
 }
 
