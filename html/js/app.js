@@ -8,6 +8,8 @@ let playerData = {
 
 let currentCrafting = null;
 let craftingInterval = null;
+let currentPage = 1;
+const itemsPerPage = 6;
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
@@ -30,6 +32,10 @@ function initializeEventListeners() {
     
     // Barra de progreso
     document.getElementById('cancelProgress').addEventListener('click', cancelCrafting);
+    
+    // Paginación
+    document.getElementById('prevPage').addEventListener('click', () => changePage(-1));
+    document.getElementById('nextPage').addEventListener('click', () => changePage(1));
     
     // Cerrar modal con Escape
     document.addEventListener('keydown', function(e) {
@@ -86,6 +92,7 @@ function renderRecipes() {
     
     if (currentRecipes.length === 0) {
         grid.innerHTML = '<div style="text-align: center; color: #D2B48C; padding: 20px;">No hay recetas disponibles</div>';
+        updatePagination();
         return;
     }
     
@@ -94,6 +101,47 @@ function renderRecipes() {
         const recipeCard = createRecipeCard(recipe, index);
         grid.appendChild(recipeCard);
     });
+    
+    currentPage = 1;
+    showPage(1);
+}
+
+// Mostrar página específica
+function showPage(page) {
+    const totalPages = Math.ceil(currentRecipes.length / itemsPerPage);
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    
+    currentRecipes.forEach((recipe, index) => {
+        const card = document.getElementById('recipesGrid').children[index];
+        if (index >= start && index < end) {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+        }
+    });
+    
+    updatePagination();
+}
+
+// Cambiar página
+function changePage(direction) {
+    const totalPages = Math.ceil(currentRecipes.length / itemsPerPage);
+    const newPage = currentPage + direction;
+    
+    if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        showPage(currentPage);
+    }
+}
+
+// Actualizar controles de paginación
+function updatePagination() {
+    const totalPages = Math.ceil(currentRecipes.length / itemsPerPage);
+    document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
+    
+    document.getElementById('prevPage').disabled = currentPage === 1;
+    document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
 }
 
 // Crear tarjeta de receta
