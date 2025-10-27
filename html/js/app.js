@@ -322,19 +322,19 @@ function showConfirmModal(recipe) {
     // Preview de la receta
     document.getElementById('recipePreview').innerHTML = `
         <div style="text-align: center; margin-bottom: 20px;">
-            <h4 style="color: #F4E4BC; font-family: 'Cinzel', serif; margin-bottom: 10px;">${recipe.name}</h4>
-            <p style="color: #D2B48C;">${recipe.description || 'Sin descripción'}</p>
+            <h4 style="color: #1F1509; font-family: 'Cinzel', serif; margin-bottom: 10px;">${recipe.name}</h4>
+            <p style="color: #2C1F13;">${recipe.description || 'Sin descripción'}</p>
         </div>
     `;
     
     // Lista de ingredientes
     document.getElementById('ingredientsList').innerHTML = `
         <div style="margin-bottom: 15px;">
-            <h5 style="color: #D2B48C; margin-bottom: 10px;">Ingredientes necesarios:</h5>
+            <h5 style="color: #1F1509; margin-bottom: 10px; font-weight: 700;">Ingredientes necesarios:</h5>
             ${recipe.ingredients.map(ingredient => `
                 <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid rgba(101, 67, 33, 0.3);">
-                    <span style="color: #F4E4BC;">${ingredient.item}</span>
-                    <span style="color: ${hasIngredient(ingredient) ? '#90EE90' : '#FFB6C1'}; font-weight: 600;">
+                    <span style="color: #1F1509;">${ingredient.item}</span>
+                    <span style="color: ${hasIngredient(ingredient) ? '#3A6B27' : '#8B2D2D'}; font-weight: 700;">
                         ${ingredient.amount}
                     </span>
                 </div>
