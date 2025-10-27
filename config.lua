@@ -77,7 +77,7 @@ Config.Recipes = {
     armory = {
         -- Nivel 1
         {
-            name = 'Cattleman Revolver',
+            name = 'Revolver Cattleman',
             item = 'weapon_revolver_cattleman',
             amount = 1,
             time = 30000,
@@ -86,7 +86,7 @@ Config.Recipes = {
             description = 'Revolver básico para defensa personal',
         },
         {
-            name = 'Standard Bow',
+            name = 'Arco Estándar',
             item = 'weapon_bow',
             amount = 1,
             time = 30000,
@@ -95,7 +95,7 @@ Config.Recipes = {
             description = 'Arco estándar',
         },
         {
-            name = 'Improved Bow',
+            name = 'Arco Mejorado',
             item = 'weapon_bow_improved',
             amount = 1,
             time = 30000,
@@ -104,7 +104,7 @@ Config.Recipes = {
             description = 'Arco mejorado',
         },
         {
-            name = 'Standard Knife',
+            name = 'Cuchillo Estándar',
             item = 'weapon_melee_knife',
             amount = 1,
             time = 30000,
@@ -122,7 +122,7 @@ Config.Recipes = {
             description = 'Tomahawk arrojadizo',
         },
         {
-            name = 'Varmint Rifle',
+            name = 'Rifle de Caza Menor',
             item = 'weapon_rifle_varmint',
             amount = 1,
             time = 30000,
@@ -131,7 +131,7 @@ Config.Recipes = {
             description = 'Rifle para alimañas',
         },
         {
-            name = 'Carbine Repeater',
+            name = 'Repetidor Carabina',
             item = 'weapon_repeater_carbine',
             amount = 1,
             time = 30000,
@@ -141,7 +141,7 @@ Config.Recipes = {
         },
         -- Nivel 2
         {
-            name = 'Double Action Revolver',
+            name = 'Revolver Doble Acción',
             item = 'weapon_revolver_doubleaction',
             amount = 1,
             time = 30000,
@@ -150,7 +150,7 @@ Config.Recipes = {
             description = 'Revolver de doble acción',
         },
         {
-            name = 'Throwing Knives',
+            name = 'Cuchillos Arrojadizos',
             item = 'weapon_thrown_throwing_knives',
             amount = 1,
             time = 30000,
@@ -168,7 +168,7 @@ Config.Recipes = {
             description = 'Machete',
         },
         {
-            name = 'Boltaction Rifle',
+            name = 'Rifle de Cerrojo',
             item = 'weapon_rifle_boltaction',
             amount = 1,
             time = 30000,
@@ -177,7 +177,7 @@ Config.Recipes = {
             description = 'Fusil de cerrojo',
         },
         {
-            name = 'Repeating Shotgun',
+            name = 'Escopeta Repetidora',
             item = 'weapon_shotgun_repeating',
             amount = 1,
             time = 30000,
@@ -186,7 +186,7 @@ Config.Recipes = {
             description = 'Escopeta repetidora',
         },
         {
-            name = 'Winchester Repeater',
+            name = 'Repetidor Winchester',
             item = 'weapon_repeater_winchester',
             amount = 1,
             time = 30000,
@@ -196,7 +196,7 @@ Config.Recipes = {
         },
         -- Nivel 3
         {
-            name = 'Lemat Revolver',
+            name = 'Revolver Lemat',
             item = 'weapon_revolver_lemat',
             amount = 1,
             time = 30000,
@@ -205,7 +205,7 @@ Config.Recipes = {
             description = 'Revolver Lemat',
         },
         {
-            name = 'Sawedoff Shotgun',
+            name = 'Escopeta Recortada',
             item = 'weapon_shotgun_sawedoff',
             amount = 1,
             time = 30000,
@@ -214,7 +214,7 @@ Config.Recipes = {
             description = 'Escopeta recortada',
         },
         {
-            name = 'Litchfield Repeater',
+            name = 'Repetidor Litchfield',
             item = 'weapon_repeater_henry',
             amount = 1,
             time = 30000,
@@ -223,7 +223,7 @@ Config.Recipes = {
             description = 'Repetidora Litchfield',
         },
         {
-            name = 'Rustic Knife',
+            name = 'Cuchillo Rústico',
             item = 'weapon_melee_knife_rustic',
             amount = 1,
             time = 30000,
@@ -232,7 +232,7 @@ Config.Recipes = {
             description = 'Cuchillo rústico',
         },
         {
-            name = 'Double Barrel Shotgun',
+            name = 'Escopeta Doble Cañón',
             item = 'weapon_shotgun_doublebarrel',
             amount = 1,
             time = 30000,
@@ -242,7 +242,7 @@ Config.Recipes = {
         },
         -- Nivel 4
         {
-            name = 'Schofield Revolver',
+            name = 'Revolver Schofield',
             item = 'weapon_revolver_schofield',
             amount = 1,
             time = 30000,
@@ -251,7 +251,7 @@ Config.Recipes = {
             description = 'Revolver Schofield',
         },
         {
-            name = 'Evans Repeater',
+            name = 'Repetidor Evans',
             item = 'weapon_repeater_evans',
             amount = 1,
             time = 30000,
@@ -260,7 +260,7 @@ Config.Recipes = {
             description = 'Repetidora Evans',
         },
         {
-            name = 'Springfield Rifle',
+            name = 'Rifle Springfield',
             item = 'weapon_rifle_springfield',
             amount = 1,
             time = 30000,
@@ -269,7 +269,7 @@ Config.Recipes = {
             description = 'Fusil Springfield',
         },
         {
-            name = 'Double Barrel Exotic Shotgun',
+            name = 'Escopeta Doble Cañón Exótica',
             item = 'weapon_shotgun_doublebarrel_exotic',
             amount = 1,
             time = 30000,
@@ -279,7 +279,7 @@ Config.Recipes = {
         },
         -- Nivel 5
         {
-            name = 'Navy Revolver',
+            name = 'Revolver Navy',
             item = 'weapon_revolver_navy',
             amount = 1,
             time = 30000,
@@ -288,7 +288,7 @@ Config.Recipes = {
             description = 'Revolver Navy',
         },
         {
-            name = 'Volcanic Pistol',
+            name = 'Pistola Volcanic',
             item = 'weapon_pistol_volcanic',
             amount = 1,
             time = 30000,
@@ -297,7 +297,7 @@ Config.Recipes = {
             description = 'Pistola Volcanic',
         },
         {
-            name = 'Rollingblock Sniper Rifle',
+            name = 'Rifle Rollingblock',
             item = 'weapon_sniperrifle_rollingblock',
             amount = 1,
             time = 30000,
@@ -306,7 +306,7 @@ Config.Recipes = {
             description = 'Fusil de francotirador Rolling Block',
         },
         {
-            name = 'Pump Action Shotgun',
+            name = 'Escopeta de Corredera',
             item = 'weapon_shotgun_pump',
             amount = 1,
             time = 30000,
@@ -315,7 +315,7 @@ Config.Recipes = {
             description = 'Escopeta de corredera',
         },
         {
-            name = 'Trader Knife',
+            name = 'Cuchillo Comerciante',
             item = 'weapon_melee_knife_trader',
             amount = 1,
             time = 30000,
@@ -324,7 +324,7 @@ Config.Recipes = {
             description = 'Cuchillo comerciante',
         },
         {
-            name = 'Cleaver',
+            name = 'Cuchillo de Carnicero',
             item = 'weapon_melee_cleaver',
             amount = 1,
             time = 30000,
@@ -334,7 +334,7 @@ Config.Recipes = {
         },
         -- Nivel 6
         {
-            name = 'Mauser Pistol',
+            name = 'Pistola Mauser',
             item = 'weapon_pistol_mauser',
             amount = 1,
             time = 30000,
@@ -343,7 +343,7 @@ Config.Recipes = {
             description = 'Pistola Mauser',
         },
         {
-            name = 'Rollingblock Exotic Sniper Rifle',
+            name = 'Rifle Rollingblock Exótico',
             item = 'weapon_sniperrifle_rollingblock_exotic',
             amount = 1,
             time = 30000,
@@ -352,7 +352,7 @@ Config.Recipes = {
             description = 'Fusil de francotirador Rolling Block exótico',
         },
         {
-            name = 'Hunter Hatchet',
+            name = 'Hacha de Cazador',
             item = 'weapon_melee_hatchet_hunter',
             amount = 1,
             time = 30000,
@@ -362,7 +362,7 @@ Config.Recipes = {
         },
         -- Nivel 7
         {
-            name = 'Semi-Auto Pistol',
+            name = 'Pistola Semi-Automática',
             item = 'weapon_pistol_semiauto',
             amount = 1,
             time = 30000,
@@ -371,7 +371,7 @@ Config.Recipes = {
             description = 'Pistola semi-automática',
         },
         {
-            name = 'Carcano Sniper Rifle',
+            name = 'Rifle Carcano',
             item = 'weapon_sniperrifle_carcano',
             amount = 1,
             time = 30000,
@@ -380,7 +380,7 @@ Config.Recipes = {
             description = 'Fusil de francotirador Carcano',
         },
         {
-            name = 'Cattleman Mexican Revolver',
+            name = 'Revolver Cattleman Mexicano',
             item = 'weapon_revolver_cattleman_mexican',
             amount = 1,
             time = 30000,
@@ -390,7 +390,7 @@ Config.Recipes = {
         },
         -- Nivel 8
         {
-            name = 'Elephant Rifle',
+            name = 'Rifle Mataelefantes',
             item = 'weapon_rifle_elephant',
             amount = 1,
             time = 30000,
@@ -399,7 +399,7 @@ Config.Recipes = {
             description = 'Fusil mataelefantes',
         },
         {
-            name = 'Double Action Gambler Revolver',
+            name = 'Revolver Doble Acción Jugador',
             item = 'weapon_revolver_doubleaction_gambler',
             amount = 1,
             time = 30000,
