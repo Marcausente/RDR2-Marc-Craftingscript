@@ -144,15 +144,45 @@ function updatePagination() {
     document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
 }
 
-// Obtener icono de arma desde el sistema de items
+// Iconos de armas mejorados
+const weaponIcons = {
+    'weapon_revolver_cattleman': '🔫',
+    'weapon_revolver_doubleaction': '🔫',
+    'weapon_revolver_schofield': '🔫',
+    'weapon_revolver_navy': '🔫',
+    'weapon_revolver_lemat': '🔫',
+    'weapon_pistol_volcanic': '🔫',
+    'weapon_pistol_mauser': '🔫',
+    'weapon_pistol_semiauto': '🔫',
+    'weapon_melee_knife': '🔪',
+    'weapon_melee_knife_jawbone': '🔪',
+    'weapon_melee_knife_trader': '🔪',
+    'weapon_melee_knife_rustic': '🔪',
+    'weapon_bow': '🏹',
+    'weapon_bow_improved': '🏹',
+    'weapon_rifle_varmint': '🔫',
+    'weapon_rifle_springfield': '🔫',
+    'weapon_rifle_boltaction': '🔫',
+    'weapon_sniperrifle_rollingblock': '🔫',
+    'weapon_sniperrifle_carcano': '🔫',
+    'weapon_repeater_carbine': '🔫',
+    'weapon_repeater_winchester': '🔫',
+    'weapon_repeater_henry': '🔫',
+    'weapon_repeater_evans': '🔫',
+    'weapon_shotgun_doublebarrel': '🔫',
+    'weapon_shotgun_sawedoff': '🔫',
+    'weapon_shotgun_semiauto': '🔫',
+    'weapon_shotgun_pump': '🔫',
+    'weapon_shotgun_repeating': '🔫',
+    'weapon_thrown_tomahawk': '🪓',
+    'weapon_melee_machete': '🔪',
+    'weapon_melee_hatchet': '🪓',
+    'weapon_melee_cleaver': '🔪'
+};
+
+// Obtener icono de arma
 function getWeaponIcon(itemName) {
-    // Buscar en el inventario si existe
-    const itemData = window.inventoryItems ? window.inventoryItems[itemName] : null;
-    if (itemData && itemData.image) {
-        return `<img src="nui://rsg-inventory/html/images/${itemData.image}" style="width: 60px; height: 60px; object-fit: contain;" />`;
-    }
-    // Fallback a emoji
-    return '🔫';
+    return weaponIcons[itemName] || '🔫';
 }
 
 // Crear tarjeta de receta
@@ -447,15 +477,6 @@ window.addEventListener('message', function(event) {
             break;
         case 'loadRecipes':
             loadRecipes(data.data);
-            break;
-        case 'loadItems':
-            // Almacenar items del inventario en una variable global
-            window.inventoryItems = {};
-            if (data.data) {
-                Object.keys(data.data).forEach(itemName => {
-                    window.inventoryItems[itemName] = data.data[itemName];
-                });
-            }
             break;
         case 'craftingConfirmed':
             // El servidor confirmó que puede comenzar, iniciar la barra de progreso
