@@ -196,7 +196,7 @@ function CanUseStation(station)
         if not hasRequiredJob then
             lib.notify({
                 title = 'Crafting',
-                description = 'Solo los armeros pueden usar esta mesa de crafting',
+                description = Config.Texts.wrongJob,
                 type = Config.Texts.errorType
             })
             return false
@@ -253,6 +253,8 @@ function OpenCraftingMenu(station)
     local stationLevel = station.craftingLevel or 1
     local recipes = {
         weapons = {},
+        tools = {},
+        materials = {},
         others = {},
         drinks = {},
         food = {}
@@ -263,6 +265,24 @@ function OpenCraftingMenu(station)
         for _, recipe in pairs(stationRecipes.weapons) do
             if recipe.requiredLevel <= stationLevel then
                 table.insert(recipes.weapons, recipe)
+            end
+        end
+    end
+    
+    -- Procesar recetas de herramientas
+    if stationRecipes.tools then
+        for _, recipe in pairs(stationRecipes.tools) do
+            if recipe.requiredLevel <= stationLevel then
+                table.insert(recipes.tools, recipe)
+            end
+        end
+    end
+    
+    -- Procesar recetas de materiales
+    if stationRecipes.materials then
+        for _, recipe in pairs(stationRecipes.materials) do
+            if recipe.requiredLevel <= stationLevel then
+                table.insert(recipes.materials, recipe)
             end
         end
     end
@@ -294,7 +314,7 @@ function OpenCraftingMenu(station)
         end
     end
     
-    local totalRecipes = #recipes.weapons + #recipes.others + #recipes.drinks + #recipes.food
+    local totalRecipes = #recipes.weapons + #recipes.tools + #recipes.materials + #recipes.others + #recipes.drinks + #recipes.food
     if totalRecipes == 0 then
         lib.notify({
             title = 'Crafting',
@@ -445,13 +465,13 @@ function StartCraftingProgress(recipe)
     local startTime = GetGameTimer()
     local duration = recipe.time
     
-    -- Solo iniciar animación si es una armería
+    -- Solo iniciar animación si es una armería o tienda general (no tabernas)
     local playerPed = PlayerPedId()
     local shouldPlayAnimation = false
     
-    -- Verificar si la estación actual es una armería
+    -- Verificar si la estación actual debe reproducir animación
     if currentCraftingStation and currentCraftingStation.stationType then
-        if currentCraftingStation.stationType == 'armory' then
+        if currentCraftingStation.stationType == 'armory' or currentCraftingStation.stationType == 'generalstore' then
             shouldPlayAnimation = true
         end
     end

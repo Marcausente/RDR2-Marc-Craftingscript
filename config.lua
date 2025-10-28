@@ -87,6 +87,24 @@ Config.CraftingStations = {
         requireDuty = true, -- Requiere estar de servicio
         requiredItems = {},
     },
+    {
+        name = 'Mesa de Tienda General - Valentine',
+        coords = vector3(-325.90, 797.73, 117.88),
+        heading = 0.0,
+        radius = 2.0,
+        enabled = true,
+        stationType = 'generalstore',
+        craftingLevel = 1,
+        blip = {
+            label = 'Mesa de Crafting',
+            sprite = 'blip_shop_crafting',
+            scale = 0.8,
+            color = 2, -- verde
+        },
+        requiredJobs = {'vlstore'}, -- Solo empleados de vlstore
+        requireDuty = true, -- Requiere estar de servicio
+        requiredItems = {},
+    },
 }
 
 -- Recetas de crafting por tipo de estación
@@ -564,6 +582,160 @@ Config.Recipes = {
             },
         },
     },
+    generalstore = {
+        -- Categoría: Herramientas
+        tools = {
+            {
+                name = 'Hacha',
+                item = 'axe',
+                amount = 1,
+                time = 10000, -- 10 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Hacha para cortar leña',
+            },
+            {
+                name = 'Binoculares',
+                item = 'weapon_kit_binoculars',
+                amount = 1,
+                time = 10000, -- 10 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Binoculares para observar a distancia',
+            },
+            {
+                name = 'Cámara',
+                item = 'weapon_kit_camera',
+                amount = 1,
+                time = 10000, -- 10 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Cámara básica para fotografías',
+            },
+            {
+                name = 'Cantimplora Vacía',
+                item = 'canteen0',
+                amount = 1,
+                time = 10000, -- 10 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Cantimplora vacía para transportar líquidos',
+            },
+            {
+                name = 'Lámpara Davy',
+                item = 'weapon_melee_davy_lantern',
+                amount = 1,
+                time = 10000, -- 10 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Lámpara Davy para iluminación segura',
+            },
+            {
+                name = 'Antorcha',
+                item = 'weapon_melee_torch',
+                amount = 1,
+                time = 10000, -- 10 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Antorcha para iluminación básica',
+            },
+            {
+                name = 'Lazo',
+                item = 'lasso',
+                amount = 1,
+                time = 10000, -- 10 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Lazo para capturar animales',
+            },
+            {
+                name = 'Lámpara de Halloween',
+                item = 'weapon_melee_lantern_halloween',
+                amount = 1,
+                time = 10000, -- 10 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Lámpara decorativa de Halloween',
+            },
+            {
+                name = 'Cámara Avanzada',
+                item = 'weapon_kit_camera_advanced',
+                amount = 1,
+                time = 10000, -- 10 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Cámara avanzada con mejor calidad',
+            },
+        },
+        -- Categoría: Materiales (vacía por ahora pero accesible)
+        materials = {
+            {
+                name = 'Madera',
+                item = 'wood',
+                amount = 2,
+                time = 5000, -- 5 segundos
+                ingredients = {
+                    {item = 'wood', amount = 1},
+                },
+                requiredLevel = 1,
+                description = 'Procesar madera para obtener más cantidad',
+            },
+        },
+        -- Categoría: Otros
+        others = {
+            {
+                name = 'Worm Bait',
+                item = 'worm_bait',
+                amount = 5,
+                time = 10000, -- 10 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Cebo de gusanos para pescar',
+            },
+            {
+                name = 'Bread Bait',
+                item = 'bread_bait',
+                amount = 3,
+                time = 8000, -- 8 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Cebo de pan para pescar',
+            },
+            {
+                name = 'Cheese Bait',
+                item = 'cheese_bait',
+                amount = 3,
+                time = 12000, -- 12 segundos
+                ingredients = {
+                    {item = 'wood', amount = 2},
+                },
+                requiredLevel = 1,
+                description = 'Cebo de queso para pescar',
+            },
+        },
+    },
 }
 
 -- Configuración de niveles y experiencia
@@ -609,6 +781,8 @@ Config.Texts = {
     categoryOthers = 'Otros',
     categoryDrinks = 'Bebidas',
     categoryFood = 'Comida',
+    categoryTools = 'Herramientas',
+    categoryMaterials = 'Materiales',
     
     -- Tipos de notificaciones
     successType = 'success',

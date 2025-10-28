@@ -1,9 +1,13 @@
 // Variables globales
 let currentRecipes = {
     weapons: [],
-    others: []
+    tools: [],
+    materials: [],
+    others: [],
+    drinks: [],
+    food: []
 };
-let currentCategory = 'weapons'; // Categoría activa por defecto
+let currentCategory = 'tools'; // Categoría activa por defecto para generalstore
 let playerData = {
     job: 'unemployed',
     level: 1,
@@ -104,6 +108,18 @@ function initializeTabs() {
     if (currentRecipes.weapons && currentRecipes.weapons.length > 0) {
         tabsHTML += `<div class="tab ${currentCategory === 'weapons' ? 'active' : ''}" data-category="weapons">
             <span>Armas</span>
+        </div>`;
+    }
+    
+    if (currentRecipes.tools && currentRecipes.tools.length > 0) {
+        tabsHTML += `<div class="tab ${currentCategory === 'tools' ? 'active' : ''}" data-category="tools">
+            <span>Herramientas</span>
+        </div>`;
+    }
+    
+    if (currentRecipes.materials && currentRecipes.materials.length > 0) {
+        tabsHTML += `<div class="tab ${currentCategory === 'materials' ? 'active' : ''}" data-category="materials">
+            <span>Materiales</span>
         </div>`;
     }
     
