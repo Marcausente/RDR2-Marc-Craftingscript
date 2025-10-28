@@ -45,10 +45,58 @@ end, false)
 
 -- Comando para probar las recetas directamente
 RegisterCommand('testrecipes', function()
-    local recipes = Config.Recipes['armory'] or {}
-    print('[marc_crafting] Debug - Recetas de armory:', #recipes)
-    for i, recipe in pairs(recipes) do
-        print('[marc_crafting] Debug - Receta', i, ':', recipe.name)
+    local stationRecipes = Config.Recipes['armory'] or {}
+    local recipes = {
+        weapons = {},
+        others = {},
+        drinks = {},
+        food = {}
+    }
+    
+    -- Procesar recetas de armas
+    if stationRecipes.weapons then
+        for _, recipe in pairs(stationRecipes.weapons) do
+            table.insert(recipes.weapons, recipe)
+        end
+    end
+    
+    -- Procesar recetas de otros items
+    if stationRecipes.others then
+        for _, recipe in pairs(stationRecipes.others) do
+            table.insert(recipes.others, recipe)
+        end
+    end
+    
+    -- Procesar recetas de bebidas
+    if stationRecipes.drinks then
+        for _, recipe in pairs(stationRecipes.drinks) do
+            table.insert(recipes.drinks, recipe)
+        end
+    end
+    
+    -- Procesar recetas de comida
+    if stationRecipes.food then
+        for _, recipe in pairs(stationRecipes.food) do
+            table.insert(recipes.food, recipe)
+        end
+    end
+    
+    print('[marc_crafting] Debug - Recetas de armas:', #recipes.weapons)
+    print('[marc_crafting] Debug - Recetas de otros:', #recipes.others)
+    print('[marc_crafting] Debug - Recetas de bebidas:', #recipes.drinks)
+    print('[marc_crafting] Debug - Recetas de comida:', #recipes.food)
+    
+    for i, recipe in pairs(recipes.weapons) do
+        print('[marc_crafting] Debug - Arma', i, ':', recipe.name)
+    end
+    for i, recipe in pairs(recipes.others) do
+        print('[marc_crafting] Debug - Otro', i, ':', recipe.name)
+    end
+    for i, recipe in pairs(recipes.drinks) do
+        print('[marc_crafting] Debug - Bebida', i, ':', recipe.name)
+    end
+    for i, recipe in pairs(recipes.food) do
+        print('[marc_crafting] Debug - Comida', i, ':', recipe.name)
     end
     
     -- Simular apertura de interfaz
@@ -66,6 +114,64 @@ end, false)
 -- Comando para dar wood para testing
 RegisterCommand('givewood', function()
     TriggerServerEvent('marc_crafting:server:giveWood')
+end, false)
+
+-- Comando para debug específico de armería
+RegisterCommand('debugarmory', function()
+    local stationRecipes = Config.Recipes['armory'] or {}
+    print('[marc_crafting] Debug - Recetas de armería encontradas:', json.encode(stationRecipes))
+    
+    if stationRecipes.others then
+        print('[marc_crafting] Debug - Recetas en "others":', #stationRecipes.others)
+        for i, recipe in pairs(stationRecipes.others) do
+            print('[marc_crafting] Debug - Receta', i, ':', recipe.name, 'Item:', recipe.item)
+        end
+    else
+        print('[marc_crafting] Debug - No se encontró la categoría "others"')
+    end
+    
+    -- Simular apertura de interfaz
+    local recipes = {
+        weapons = {},
+        others = {},
+        drinks = {},
+        food = {}
+    }
+    
+    if stationRecipes.others then
+        for _, recipe in pairs(stationRecipes.others) do
+            table.insert(recipes.others, recipe)
+        end
+    end
+    
+    local playerData = {
+        job = 'vlarmory',
+        level = 1,
+        experience = 0,
+        maxExperience = 1000,
+        onDuty = true
+    }
+    
+    OpenCraftingUI(playerData, recipes)
+end, false)
+
+-- Comando para verificar todas las recetas
+RegisterCommand('checkrecipes', function()
+    print('[marc_crafting] Debug - Verificando todas las recetas...')
+    
+    for stationType, recipes in pairs(Config.Recipes) do
+        print('[marc_crafting] Debug - Estación:', stationType)
+        if type(recipes) == 'table' then
+            for category, categoryRecipes in pairs(recipes) do
+                if type(categoryRecipes) == 'table' then
+                    print('[marc_crafting] Debug - Categoría:', category, 'Recetas:', #categoryRecipes)
+                    for i, recipe in pairs(categoryRecipes) do
+                        print('[marc_crafting] Debug - Receta', i, ':', recipe.name, 'Item:', recipe.item)
+                    end
+                end
+            end
+        end
+    end
 end, false)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
@@ -204,20 +310,55 @@ function OpenCraftingMenu(station)
     end
     
     currentCraftingStation = station
-    local allRecipes = Config.Recipes[station.stationType] or {}
+    local stationRecipes = Config.Recipes[station.stationType] or {}
     
     -- Filtrar recetas según el nivel de la estación
     local stationLevel = station.craftingLevel or 1
-    local recipes = {}
+    local recipes = {
+        weapons = {},
+        others = {},
+        drinks = {},
+        food = {}
+    }
     
-    for _, recipe in pairs(allRecipes) do
-        -- Solo mostrar recetas que el nivel de la estación puede craftear
-        if recipe.requiredLevel <= stationLevel then
-            table.insert(recipes, recipe)
+    -- Procesar recetas de armas
+    if stationRecipes.weapons then
+        for _, recipe in pairs(stationRecipes.weapons) do
+            if recipe.requiredLevel <= stationLevel then
+                table.insert(recipes.weapons, recipe)
+            end
         end
     end
     
-    if #recipes == 0 then
+    -- Procesar recetas de otros items
+    if stationRecipes.others then
+        for _, recipe in pairs(stationRecipes.others) do
+            if recipe.requiredLevel <= stationLevel then
+                table.insert(recipes.others, recipe)
+            end
+        end
+    end
+    
+    -- Procesar recetas de bebidas
+    if stationRecipes.drinks then
+        for _, recipe in pairs(stationRecipes.drinks) do
+            if recipe.requiredLevel <= stationLevel then
+                table.insert(recipes.drinks, recipe)
+            end
+        end
+    end
+    
+    -- Procesar recetas de comida
+    if stationRecipes.food then
+        for _, recipe in pairs(stationRecipes.food) do
+            if recipe.requiredLevel <= stationLevel then
+                table.insert(recipes.food, recipe)
+            end
+        end
+    end
+    
+    local totalRecipes = #recipes.weapons + #recipes.others + #recipes.drinks + #recipes.food
+    if totalRecipes == 0 then
         lib.notify({
             title = 'Crafting',
             description = 'No hay recetas disponibles para esta estación',
@@ -236,9 +377,21 @@ function OpenCraftingMenu(station)
     
     -- Debug: mostrar información de las recetas
     print('[marc_crafting] Debug - Nivel de estación:', stationLevel)
-    print('[marc_crafting] Debug - Recetas filtradas:', #recipes)
-    for i, recipe in pairs(recipes) do
-        print('[marc_crafting] Debug - Receta', i, ':', recipe.name, 'Req:', recipe.requiredLevel)
+    print('[marc_crafting] Debug - Recetas de armas:', #recipes.weapons)
+    print('[marc_crafting] Debug - Recetas de otros:', #recipes.others)
+    print('[marc_crafting] Debug - Recetas de bebidas:', #recipes.drinks)
+    print('[marc_crafting] Debug - Recetas de comida:', #recipes.food)
+    for i, recipe in pairs(recipes.weapons) do
+        print('[marc_crafting] Debug - Arma', i, ':', recipe.name, 'Req:', recipe.requiredLevel)
+    end
+    for i, recipe in pairs(recipes.others) do
+        print('[marc_crafting] Debug - Otro', i, ':', recipe.name, 'Req:', recipe.requiredLevel)
+    end
+    for i, recipe in pairs(recipes.drinks) do
+        print('[marc_crafting] Debug - Bebida', i, ':', recipe.name, 'Req:', recipe.requiredLevel)
+    end
+    for i, recipe in pairs(recipes.food) do
+        print('[marc_crafting] Debug - Comida', i, ':', recipe.name, 'Req:', recipe.requiredLevel)
     end
     
     -- Abrir interfaz HTML

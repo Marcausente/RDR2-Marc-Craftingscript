@@ -1,5 +1,9 @@
 // Variables globales
-let currentRecipes = [];
+let currentRecipes = {
+    weapons: [],
+    others: []
+};
+let currentCategory = 'weapons'; // Categoría activa por defecto
 let playerData = {
     job: 'unemployed',
     level: 1,
@@ -60,9 +64,11 @@ function loadPlayerData(data) {
 // Cargar recetas
 function loadRecipes(recipes) {
     console.log('[marc_crafting] Debug - Recetas recibidas:', recipes);
-    console.log('[marc_crafting] Debug - Cantidad de recetas:', recipes.length);
+    console.log('[marc_crafting] Debug - Recetas de armas:', recipes.weapons ? recipes.weapons.length : 0);
+    console.log('[marc_crafting] Debug - Recetas de otros:', recipes.others ? recipes.others.length : 0);
     
     currentRecipes = recipes;
+    initializeTabs();
     renderRecipes();
 }
 
@@ -78,25 +84,109 @@ function getJobDisplayName(job) {
         'vlarmory': 'Armería Valentine',
         'rharmory': 'Armería Rhodes',
         'taberna': 'Taberna',
+        'bwtabern': 'Taberna BW',
         'unemployed': 'Desempleado'
     };
     return jobNames[job] || job;
 }
 
+// Inicializar pestañas
+function initializeTabs() {
+    const tabsContainer = document.getElementById('categoryTabs');
+    if (!tabsContainer) {
+        console.error('No se encontró el contenedor de pestañas');
+        return;
+    }
+    
+    // Determinar qué categorías mostrar según las recetas disponibles
+    let tabsHTML = '';
+    
+    if (currentRecipes.weapons && currentRecipes.weapons.length > 0) {
+        tabsHTML += `<div class="tab ${currentCategory === 'weapons' ? 'active' : ''}" data-category="weapons">
+            <span>Armas</span>
+        </div>`;
+    }
+    
+    if (currentRecipes.others && currentRecipes.others.length > 0) {
+        tabsHTML += `<div class="tab ${currentCategory === 'others' ? 'active' : ''}" data-category="others">
+            <span>Otros</span>
+        </div>`;
+    }
+    
+    if (currentRecipes.food && currentRecipes.food.length > 0) {
+        tabsHTML += `<div class="tab ${currentCategory === 'food' ? 'active' : ''}" data-category="food">
+            <span>Comida</span>
+        </div>`;
+    }
+    
+    if (currentRecipes.drinks && currentRecipes.drinks.length > 0) {
+        tabsHTML += `<div class="tab ${currentCategory === 'drinks' ? 'active' : ''}" data-category="drinks">
+            <span>Bebidas</span>
+        </div>`;
+    }
+    
+    tabsContainer.innerHTML = tabsHTML;
+    
+    // Agregar event listeners a las pestañas
+    tabsContainer.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const category = tab.dataset.category;
+            switchCategory(category);
+        });
+    });
+    
+    // Establecer la categoría activa por defecto
+    if (currentRecipes.weapons && currentRecipes.weapons.length > 0) {
+        currentCategory = 'weapons';
+    } else if (currentRecipes.food && currentRecipes.food.length > 0) {
+        currentCategory = 'food';
+    } else if (currentRecipes.drinks && currentRecipes.drinks.length > 0) {
+        currentCategory = 'drinks';
+    } else if (currentRecipes.others && currentRecipes.others.length > 0) {
+        currentCategory = 'others';
+    }
+    
+    // Actualizar pestañas activas
+    tabsContainer.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.category === currentCategory) {
+            tab.classList.add('active');
+        }
+    });
+}
+
+// Cambiar categoría
+function switchCategory(category) {
+    if (currentCategory === category) return;
+    
+    currentCategory = category;
+    
+    // Actualizar pestañas activas
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelector(`[data-category="${category}"]`).classList.add('active');
+    
+    // Renderizar recetas de la nueva categoría
+    renderRecipes();
+}
+
 // Renderizar recetas
 function renderRecipes() {
-    console.log('[marc_crafting] Debug - Renderizando recetas:', currentRecipes);
+    console.log('[marc_crafting] Debug - Renderizando recetas de categoría:', currentCategory);
     
     const grid = document.getElementById('recipesGrid');
     grid.innerHTML = '';
     
-    if (currentRecipes.length === 0) {
-        grid.innerHTML = '<div style="text-align: center; color: #D2B48C; padding: 20px;">No hay recetas disponibles</div>';
+    const recipes = currentRecipes[currentCategory] || [];
+    
+    if (recipes.length === 0) {
+        grid.innerHTML = '<div style="text-align: center; color: #D2B48C; padding: 20px;">No hay recetas disponibles en esta categoría</div>';
         updatePagination();
         return;
     }
     
-    currentRecipes.forEach((recipe, index) => {
+    recipes.forEach((recipe, index) => {
         console.log('[marc_crafting] Debug - Creando tarjeta para receta:', recipe.name);
         const recipeCard = createRecipeCard(recipe, index);
         grid.appendChild(recipeCard);
@@ -108,11 +198,12 @@ function renderRecipes() {
 
 // Mostrar página específica
 function showPage(page) {
-    const totalPages = Math.ceil(currentRecipes.length / itemsPerPage);
+    const recipes = currentRecipes[currentCategory] || [];
+    const totalPages = Math.ceil(recipes.length / itemsPerPage);
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     
-    currentRecipes.forEach((recipe, index) => {
+    recipes.forEach((recipe, index) => {
         const card = document.getElementById('recipesGrid').children[index];
         if (index >= start && index < end) {
             card.classList.remove('hidden');
@@ -126,7 +217,8 @@ function showPage(page) {
 
 // Cambiar página
 function changePage(direction) {
-    const totalPages = Math.ceil(currentRecipes.length / itemsPerPage);
+    const recipes = currentRecipes[currentCategory] || [];
+    const totalPages = Math.ceil(recipes.length / itemsPerPage);
     const newPage = currentPage + direction;
     
     if (newPage >= 1 && newPage <= totalPages) {
@@ -137,7 +229,8 @@ function changePage(direction) {
 
 // Actualizar controles de paginación
 function updatePagination() {
-    const totalPages = Math.ceil(currentRecipes.length / itemsPerPage);
+    const recipes = currentRecipes[currentCategory] || [];
+    const totalPages = Math.ceil(recipes.length / itemsPerPage);
     document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
     
     document.getElementById('prevPage').disabled = currentPage === 1;
