@@ -111,69 +111,6 @@ RegisterCommand('testrecipes', function()
     OpenCraftingUI(playerData, recipes)
 end, false)
 
--- Comando para dar wood para testing
-RegisterCommand('givewood', function()
-    TriggerServerEvent('marc_crafting:server:giveWood')
-end, false)
-
--- Comando para debug específico de armería
-RegisterCommand('debugarmory', function()
-    local stationRecipes = Config.Recipes['armory'] or {}
-    print('[marc_crafting] Debug - Recetas de armería encontradas:', json.encode(stationRecipes))
-    
-    if stationRecipes.others then
-        print('[marc_crafting] Debug - Recetas en "others":', #stationRecipes.others)
-        for i, recipe in pairs(stationRecipes.others) do
-            print('[marc_crafting] Debug - Receta', i, ':', recipe.name, 'Item:', recipe.item)
-        end
-    else
-        print('[marc_crafting] Debug - No se encontró la categoría "others"')
-    end
-    
-    -- Simular apertura de interfaz
-    local recipes = {
-        weapons = {},
-        others = {},
-        drinks = {},
-        food = {}
-    }
-    
-    if stationRecipes.others then
-        for _, recipe in pairs(stationRecipes.others) do
-            table.insert(recipes.others, recipe)
-        end
-    end
-    
-    local playerData = {
-        job = 'vlarmory',
-        level = 1,
-        experience = 0,
-        maxExperience = 1000,
-        onDuty = true
-    }
-    
-    OpenCraftingUI(playerData, recipes)
-end, false)
-
--- Comando para verificar todas las recetas
-RegisterCommand('checkrecipes', function()
-    print('[marc_crafting] Debug - Verificando todas las recetas...')
-    
-    for stationType, recipes in pairs(Config.Recipes) do
-        print('[marc_crafting] Debug - Estación:', stationType)
-        if type(recipes) == 'table' then
-            for category, categoryRecipes in pairs(recipes) do
-                if type(categoryRecipes) == 'table' then
-                    print('[marc_crafting] Debug - Categoría:', category, 'Recetas:', #categoryRecipes)
-                    for i, recipe in pairs(categoryRecipes) do
-                        print('[marc_crafting] Debug - Receta', i, ':', recipe.name, 'Item:', recipe.item)
-                    end
-                end
-            end
-        end
-    end
-end, false)
-
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     PlayerData = {}
 end)
@@ -375,25 +312,6 @@ function OpenCraftingMenu(station)
         stationLevel = stationLevel -- Pasar el nivel de la estación a la UI
     }
     
-    -- Debug: mostrar información de las recetas
-    print('[marc_crafting] Debug - Nivel de estación:', stationLevel)
-    print('[marc_crafting] Debug - Recetas de armas:', #recipes.weapons)
-    print('[marc_crafting] Debug - Recetas de otros:', #recipes.others)
-    print('[marc_crafting] Debug - Recetas de bebidas:', #recipes.drinks)
-    print('[marc_crafting] Debug - Recetas de comida:', #recipes.food)
-    for i, recipe in pairs(recipes.weapons) do
-        print('[marc_crafting] Debug - Arma', i, ':', recipe.name, 'Req:', recipe.requiredLevel)
-    end
-    for i, recipe in pairs(recipes.others) do
-        print('[marc_crafting] Debug - Otro', i, ':', recipe.name, 'Req:', recipe.requiredLevel)
-    end
-    for i, recipe in pairs(recipes.drinks) do
-        print('[marc_crafting] Debug - Bebida', i, ':', recipe.name, 'Req:', recipe.requiredLevel)
-    end
-    for i, recipe in pairs(recipes.food) do
-        print('[marc_crafting] Debug - Comida', i, ':', recipe.name, 'Req:', recipe.requiredLevel)
-    end
-    
     -- Abrir interfaz HTML
     OpenCraftingUI(playerData, recipes)
 end
@@ -527,30 +445,27 @@ function StartCraftingProgress(recipe)
     local startTime = GetGameTimer()
     local duration = recipe.time
     
-    -- Iniciar la animación inmediatamente
+    -- Solo iniciar animación si es una armería
     local playerPed = PlayerPedId()
+    local shouldPlayAnimation = false
     
-    -- Cargar diccionario de animación
-    RequestAnimDict("script_em@crafting@lets_craft")
-    while not HasAnimDictLoaded("script_em@crafting@lets_craft") do
-        Wait(10)
+    -- Verificar si la estación actual es una armería
+    if currentCraftingStation and currentCraftingStation.stationType then
+        if currentCraftingStation.stationType == 'armory' then
+            shouldPlayAnimation = true
+        end
     end
     
-    -- Iniciar la animación con loop
-    TaskPlayAnim(playerPed, "script_em@crafting@lets_craft", "KIT_EMOTE_ACTION_LETS_CRAFT_1", 8.0, -8.0, -1, 1, 0, false, false, false)
-    
-    print('[marc_crafting] Animación iniciada')
+    if shouldPlayAnimation then
+        -- Usar TaskEmote como en el script de armería
+        TaskEmote(playerPed, 0, 2, joaat('KIT_EMOTE_ACTION_LETS_CRAFT_1'), true, true, true, true, true)
+    end
     
     craftingTimer = CreateThread(function()
         while isCrafting do
             local currentTime = GetGameTimer()
             local elapsed = currentTime - startTime
             craftingProgress = math.min(elapsed / duration, 1.0)
-            
-            -- Mantener la animación
-            if not IsEntityPlayingAnim(playerPed, "script_em@crafting@lets_craft", "KIT_EMOTE_ACTION_LETS_CRAFT_1", 3) then
-                TaskPlayAnim(playerPed, "script_em@crafting@lets_craft", "KIT_EMOTE_ACTION_LETS_CRAFT_1", 8.0, -8.0, -1, 1, 0, false, false, false)
-            end
             
             if craftingProgress >= 1.0 then
                 break
@@ -594,8 +509,6 @@ RegisterNUICallback('closeCrafting', function(data, cb)
 end)
 
 RegisterNUICallback('startCrafting', function(data, cb)
-    print('[marc_crafting] Debug - startCrafting callback recibido:', json.encode(data))
-    
     local recipe
     if type(data) == 'string' then
         recipe = json.decode(data)
@@ -603,13 +516,10 @@ RegisterNUICallback('startCrafting', function(data, cb)
         recipe = data
     end
     
-    print('[marc_crafting] Debug - recipe decodificado:', json.encode(recipe))
-    
     if recipe then
         StartCrafting(recipe)
         cb('ok')
     else
-        print('[marc_crafting] Error: recipe es nil en callback startCrafting')
         cb('error')
     end
 end)
@@ -643,8 +553,6 @@ end)
 -- Eventos del servidor
 -- Evento cuando el servidor confirma que puede comenzar el crafting
 RegisterNetEvent('marc_crafting:client:craftingConfirmed', function(recipe)
-    print('[marc_crafting] Crafting confirmado por servidor, receta:', recipe and recipe.name or 'nil')
-    
     -- Guardar la receta confirmada
     if recipe then
         currentCraftingRecipe = recipe
