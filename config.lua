@@ -105,6 +105,24 @@ Config.CraftingStations = {
         requireDuty = true, -- Requiere estar de servicio
         requiredItems = {},
     },
+    {
+        name = 'Mesa de Tienda General - Rhodes',
+        coords = vector3(1324.68, -1289.99, 77.26),
+        heading = 0.0,
+        radius = 2.0,
+        enabled = true,
+        stationType = 'generalstore',
+        craftingLevel = 1,
+        blip = {
+            label = 'Mesa de Crafting',
+            sprite = 'blip_shop_crafting',
+            scale = 0.8,
+            color = 2, -- verde
+        },
+        requiredJobs = {'rhstore'}, -- Solo empleados de rhstore
+        requireDuty = true, -- Requiere estar de servicio
+        requiredItems = {},
+    },
 }
 
 -- Recetas de crafting por tipo de estación
