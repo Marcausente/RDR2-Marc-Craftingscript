@@ -88,6 +88,23 @@ Config.CraftingStations = {
         requiredItems = {},
     },
     {
+        name = 'Mesa de Taberna - Valentine',
+        coords = vector3(-312.19, 805.25, 119.3),
+        heading = 0.0,
+        radius = 2.0,
+        enabled = true,
+        stationType = 'vltabern',
+        blip = {
+            label = 'Mesa de Crafting',
+            sprite = 'blip_shop_crafting',
+            scale = 0.8,
+            color = 25, -- marrón
+        },
+        requiredJobs = {'vltabern'}, -- Solo el job de taberna de Valentine
+        requireDuty = true, -- Requiere estar de servicio
+        requiredItems = {},
+    },
+    {
         name = 'Mesa de Tienda General - Valentine',
         coords = vector3(-325.90, 797.73, 117.88),
         heading = 0.0,
@@ -597,6 +614,59 @@ Config.Recipes = {
                 ingredients = {{item = 'wood', amount = 2}},
                 requiredLevel = 1,
                 description = 'Pan fresco recién horneado',
+            },
+        },
+    },
+    vltabern = {
+        -- Categoría: Bebidas
+        drinks = {
+            {
+                name = 'Agua',
+                item = 'water',
+                amount = 1,
+                time = 5000, -- 5 segundos
+                ingredients = {{item = 'wood', amount = 2}},
+                requiredLevel = 1,
+                description = 'Agua fresca y limpia',
+            },
+            {
+                name = 'Café',
+                item = 'coffee',
+                amount = 1,
+                time = 5000, -- 5 segundos
+                ingredients = {{item = 'wood', amount = 2}},
+                requiredLevel = 1,
+                description = 'Café caliente y aromático',
+            },
+            {
+                name = 'Whiskey',
+                item = 'whiskey',
+                amount = 1,
+                time = 8000, -- 8 segundos
+                ingredients = {{item = 'wood', amount = 3}},
+                requiredLevel = 2,
+                description = 'Whiskey de calidad premium',
+            },
+        },
+        -- Categoría: Comida
+        food = {
+            {
+                name = 'Pan',
+                item = 'bread',
+                amount = 1,
+                time = 7000, -- 7 segundos
+                ingredients = {{item = 'wood', amount = 2}},
+                requiredLevel = 1,
+                description = 'Pan fresco recién horneado',
+            },
+            {
+                name = 'Carne Asada',
+                item = 'cooked_meat',
+                amount = 1,
+                time = 10000, -- 10 segundos
+                ingredients = {{item = 'raw_meat', amount = 1}},
+                requiredLevel = 2,
+                description = 'Carne perfectamente asada',
             },
         },
     },
