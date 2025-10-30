@@ -131,6 +131,9 @@ body {
     gap: 10px;
     height: 100%;
     overflow-y: auto;
+    align-content: start; /* evita que las filas se estiren cuando hay pocas cards */
+    align-items: start;
+    grid-auto-rows: max-content;
 }
 
 /* Scrollbars estilizados */
@@ -174,6 +177,7 @@ body {
     gap: 6px;
     cursor: pointer;
     transition: transform .2s ease, box-shadow .2s ease;
+    min-height: 200px; /* un poco más alto para mejor presencia visual */
 }
 
 .item-tile:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,.35); }
