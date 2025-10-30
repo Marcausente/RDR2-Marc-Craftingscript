@@ -260,10 +260,29 @@ function OpenCraftingMenu(station)
         food = {}
     }
     
+    -- Helper: adjuntar iconos de items (salida e ingredientes)
+    local function attachIcons(recipe)
+        if not recipe then return end
+        local itemsMap = (QBCore.Shared and QBCore.Shared.Items) or (RSGShared and RSGShared.Items) or {}
+        local outMeta = itemsMap[recipe.item]
+        if outMeta and outMeta.image then
+            recipe.icon = outMeta.image
+        end
+        if type(recipe.ingredients) == 'table' then
+            for _, ing in pairs(recipe.ingredients) do
+                local meta = itemsMap[ing.item]
+                if meta and meta.image then
+                    ing.icon = meta.image
+                end
+            end
+        end
+    end
+
     -- Procesar recetas de armas
     if stationRecipes.weapons then
         for _, recipe in pairs(stationRecipes.weapons) do
             if recipe.requiredLevel <= stationLevel then
+                attachIcons(recipe)
                 table.insert(recipes.weapons, recipe)
             end
         end
@@ -273,6 +292,7 @@ function OpenCraftingMenu(station)
     if stationRecipes.tools then
         for _, recipe in pairs(stationRecipes.tools) do
             if recipe.requiredLevel <= stationLevel then
+                attachIcons(recipe)
                 table.insert(recipes.tools, recipe)
             end
         end
@@ -282,6 +302,7 @@ function OpenCraftingMenu(station)
     if stationRecipes.materials then
         for _, recipe in pairs(stationRecipes.materials) do
             if recipe.requiredLevel <= stationLevel then
+                attachIcons(recipe)
                 table.insert(recipes.materials, recipe)
             end
         end
@@ -291,6 +312,7 @@ function OpenCraftingMenu(station)
     if stationRecipes.others then
         for _, recipe in pairs(stationRecipes.others) do
             if recipe.requiredLevel <= stationLevel then
+                attachIcons(recipe)
                 table.insert(recipes.others, recipe)
             end
         end
@@ -300,6 +322,7 @@ function OpenCraftingMenu(station)
     if stationRecipes.drinks then
         for _, recipe in pairs(stationRecipes.drinks) do
             if recipe.requiredLevel <= stationLevel then
+                attachIcons(recipe)
                 table.insert(recipes.drinks, recipe)
             end
         end
@@ -309,6 +332,7 @@ function OpenCraftingMenu(station)
     if stationRecipes.food then
         for _, recipe in pairs(stationRecipes.food) do
             if recipe.requiredLevel <= stationLevel then
+                attachIcons(recipe)
                 table.insert(recipes.food, recipe)
             end
         end
@@ -329,7 +353,8 @@ function OpenCraftingMenu(station)
         job = PlayerData.job.name,
         level = GetPlayerCraftingLevel(),
         onDuty = PlayerData.job.onduty,
-        stationLevel = stationLevel -- Pasar el nivel de la estación a la UI
+        stationLevel = stationLevel, -- Pasar el nivel de la estación a la UI
+        stationType = station.stationType
     }
     
     -- Abrir interfaz HTML

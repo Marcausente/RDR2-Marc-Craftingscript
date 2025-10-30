@@ -11,7 +11,9 @@ let currentCategory = 'tools'; // Categoría activa por defecto para generalstor
 let playerData = {
     job: 'unemployed',
     level: 1,
-    onDuty: false
+    onDuty: false,
+    stationType: 'generalstore',
+    stationLevel: 1
 };
 
 let currentCrafting = null;
@@ -151,15 +153,19 @@ function initializeTabs() {
         });
     });
     
-    // Establecer la categoría activa por defecto
-    if (currentRecipes.weapons && currentRecipes.weapons.length > 0) {
-        currentCategory = 'weapons';
-    } else if (currentRecipes.food && currentRecipes.food.length > 0) {
-        currentCategory = 'food';
-    } else if (currentRecipes.drinks && currentRecipes.drinks.length > 0) {
-        currentCategory = 'drinks';
-    } else if (currentRecipes.others && currentRecipes.others.length > 0) {
-        currentCategory = 'others';
+    // Establecer la categoría activa por defecto según estación
+    if (playerData.stationType === 'armory') {
+        if (currentRecipes.weapons && currentRecipes.weapons.length > 0) currentCategory = 'weapons';
+        else if (currentRecipes.materials && currentRecipes.materials.length > 0) currentCategory = 'materials';
+        else if (currentRecipes.tools && currentRecipes.tools.length > 0) currentCategory = 'tools';
+    } else if (playerData.stationType === 'tabern' || playerData.stationType === 'tavern') {
+        if (currentRecipes.drinks && currentRecipes.drinks.length > 0) currentCategory = 'drinks';
+        else if (currentRecipes.food && currentRecipes.food.length > 0) currentCategory = 'food';
+    } else {
+        if (currentRecipes.tools && currentRecipes.tools.length > 0) currentCategory = 'tools';
+        else if (currentRecipes.materials && currentRecipes.materials.length > 0) currentCategory = 'materials';
+        else if (currentRecipes.others && currentRecipes.others.length > 0) currentCategory = 'others';
+        else if (currentRecipes.weapons && currentRecipes.weapons.length > 0) currentCategory = 'weapons';
     }
     
     // Actualizar pestañas activas
@@ -360,6 +366,12 @@ function getWeaponIcon(itemName) {
     return createWeaponSVG(type);
 }
 
+// Utilidad: URL de imagen del inventario
+function getItemImageURL(filename) {
+    if (!filename) return '';
+    return `nui://rsg-inventory/html/images/${filename}`;
+}
+
 // Crear tarjeta de receta
 function createRecipeCard(recipe, index) {
     const card = document.createElement('div');
@@ -370,25 +382,33 @@ function createRecipeCard(recipe, index) {
     // Todas las recetas mostradas se pueden craftear
     const canCraft = true;
     
+    const iconHtml = recipe.icon
+        ? `<img class=\"recipe-icon\" src=\"${getItemImageURL(recipe.icon)}\" alt=\"${recipe.name}\"/>`
+        : (currentCategory === 'weapons' ? getWeaponIcon(recipe.item || recipe.name || '') : '');
+
     card.innerHTML = `
         <div class="recipe-header">
             <div class="recipe-name">${recipe.name}</div>
             <div class="recipe-level">Nivel ${recipe.requiredLevel}</div>
         </div>
-        <div class="recipe-description">${recipe.description || 'Sin descripción'}</div>
-        <div class="recipe-ingredients">
-            <div class="ingredients-title">Ingredientes:</div>
-            ${recipe.ingredients.map(ingredient => `
-                <div class="ingredient-item">
-                    <span class="ingredient-name">${ingredient.item}</span>
-                    <span class="ingredient-amount ${hasIngredient(ingredient) ? 'has-item' : 'missing-item'}">
-                        ${ingredient.amount}
-                    </span>
+        <div class="recipe-body">
+            <div class="recipe-thumb">${iconHtml}</div>
+            <div class="recipe-details">
+                <div class="recipe-description">${recipe.description || 'Sin descripción'}</div>
+                <div class="recipe-ingredients">
+                    <div class="ingredients-title">Ingredientes:</div>
+                    ${recipe.ingredients.map(ingredient => `
+                        <div class=\"ingredient-item\">
+                            ${ingredient.icon ? `<img class=\\\"ingredient-icon\\\" src=\\\"${getItemImageURL(ingredient.icon)}\\\" alt=\\\"${ingredient.item}\\\"/>` : ''}
+                            <span class=\"ingredient-name\">${ingredient.item}</span>
+                            <span class=\"ingredient-amount ${hasIngredient(ingredient) ? 'has-item' : 'missing-item'}\">${ingredient.amount}</span>
+                        </div>
+                    `).join('')}
                 </div>
-            `).join('')}
-        </div>
-        <div class="recipe-time">
-            <span>Tiempo: ${formatTime(recipe.time)}</span>
+                <div class="recipe-time">
+                    <span>Tiempo: ${formatTime(recipe.time)}</span>
+                </div>
+            </div>
         </div>
     `;
     
