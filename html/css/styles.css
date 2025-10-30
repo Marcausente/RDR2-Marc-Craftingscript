@@ -120,6 +120,35 @@ body {
     overflow-y: auto;
 }
 
+/* Scrollbars estilizados */
+.items-grid::-webkit-scrollbar,
+.detail-materials::-webkit-scrollbar {
+    width: 10px;
+}
+.items-grid::-webkit-scrollbar-track,
+.detail-materials::-webkit-scrollbar-track {
+    background: rgba(139, 111, 92, 0.15);
+    border: 1px solid #8B6F5C;
+    border-radius: 6px;
+}
+.items-grid::-webkit-scrollbar-thumb,
+.detail-materials::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #B8956A, #8B7355);
+    border: 1px solid #6B4C2F;
+    border-radius: 6px;
+}
+.items-grid::-webkit-scrollbar-thumb:hover,
+.detail-materials::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #D4B896, #A0826D);
+}
+
+/* Firefox */
+.items-grid,
+.detail-materials {
+    scrollbar-color: #8B7355 rgba(139,111,92,0.15);
+    scrollbar-width: thin;
+}
+
 .item-tile {
     background: linear-gradient(135deg, rgba(232,213,183,.55), rgba(203,185,159,.5));
     border: 2px solid #8B6F5C;
@@ -142,18 +171,28 @@ body {
 
 .detail-panel { display: flex; flex-direction: column; gap: 10px; height: 100%; }
 .detail-header { border-bottom: 1px solid #A0826D; padding-bottom: 6px; }
-.detail-title { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; color: #1F1509; }
-.detail-desc { font-size: .9rem; color: #2C1F13; }
-.detail-subtitle { margin-top: 6px; font-weight: 700; color: #1F1509; text-transform: uppercase; font-size: .8rem; }
+.detail-title { font-family: 'Cinzel', serif; font-size: 1.55rem; font-weight: 700; color: #1F1509; }
+.detail-desc { font-size: 1.1rem; color: #2C1F13; line-height: 1.45; }
+.detail-subtitle { margin-top: 8px; font-weight: 800; color: #1F1509; text-transform: uppercase; font-size: 1.05rem; letter-spacing: .6px; }
 .detail-materials { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex: 1; }
-.mat-row { display: flex; align-items: center; justify-content: space-between; background: rgba(139,111,92,.15); border-left: 2px solid #8B6F5C; padding: 6px 8px; }
+.mat-row { display: flex; align-items: center; justify-content: space-between; background: rgba(139,111,92,.15); border-left: 2px solid #8B6F5C; padding: 10px 12px; font-size: 1.05rem; }
 .mat-left { display: flex; align-items: center; gap: 8px; }
-.mat-icon { width: 20px; height: 20px; object-fit: contain; }
-.mat-name { color: #1F1509; font-weight: 600; }
+.mat-icon { width: 22px; height: 22px; object-fit: contain; }
+.mat-name { color: #1F1509; font-weight: 700; }
 .mat-amount { font-weight: 700; }
 .mat-amount.ok { color: #3A6B27; }
 .mat-amount.missing { color: #8B2D2D; }
-.detail-actions { border-top: 1px solid #A0826D; padding-top: 8px; display: flex; justify-content: flex-end; }
+.detail-actions { border-top: 1px solid #A0826D; padding-top: 12px; display: flex; justify-content: center; }
+.detail-actions .btn-primary { 
+    padding: 20px 64px;
+    font-size: 1.2rem;
+    border-width: 3px;
+    min-width: 320px;
+    text-align: center;
+}
+
+/* Icono grande de preview */
+/* (icono eliminado) */
 
 /* Tiras de cobre */
 .copper-strip {
