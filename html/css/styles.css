@@ -79,12 +79,24 @@ body {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
+    padding: 8px 12px;
+    background: linear-gradient(180deg, rgba(232, 213, 183, 0.25) 0%, rgba(210, 192, 168, 0.2) 100%);
+    border: 2px solid #8B6F5C;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 3px 8px rgba(0,0,0,0.35);
 }
 
 .navbar {
     display: flex;
-    gap: 8px;
+    gap: 6px;
+    padding: 6px 8px;
+    background: linear-gradient(135deg, #B8956A 0%, #A0826D 60%, #8B7355 100%);
+    border: 2px solid #8B6F3C;
+    border-radius: 10px;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.25), 0 2px 5px rgba(0,0,0,0.25);
 }
+
+.nav-right { margin-right: 12px; }
 
 .level-pill {
     background: linear-gradient(135deg, #A67C52 0%, #8B5A3C 100%);
@@ -102,7 +114,8 @@ body {
     display: grid;
     grid-template-columns: 1.1fr 1fr;
     gap: 12px;
-    height: calc(100% - 60px);
+    flex: 1;
+    min-height: 0; /* evita que el contenido desborde verticalmente */
 }
 
 .items-column, .detail-column {
@@ -922,17 +935,17 @@ body {
 }
 
 .tab {
-    background: linear-gradient(135deg, #8B7355 0%, #A0826D 50%, #6B5A47 100%);
-    border: 2px solid #654321;
-    border-radius: 8px;
-    padding: 12px 24px;
+    background: linear-gradient(135deg, #C8A375 0%, #B48C63 60%, #9A7757 100%);
+    border: 2px solid #7A5C3E;
+    border-radius: 6px;
+    padding: 10px 18px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     font-family: 'Cinzel', serif;
-    font-weight: 600;
-    color: #F4E4BC;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    color: #2C1F13;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
     position: relative;
     overflow: hidden;
 }
@@ -953,18 +966,15 @@ body {
 }
 
 .tab:hover {
-    background: linear-gradient(135deg, #A0826D 0%, #B8956A 50%, #8B7355 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #D4B896 0%, #C39E73 60%, #A0826D 100%);
+    transform: translateY(-1px);
 }
 
 .tab.active {
-    background: linear-gradient(135deg, #B8956A 0%, #D4B896 50%, #A0826D 100%);
-    border-color: #8B4513;
+    background: linear-gradient(135deg, #E0C49B 0%, #D4B896 60%, #B8956A 100%);
+    border-color: #8B6F3C;
     color: #2C1F13;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-    transform: translateY(-2px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 0 0 1px rgba(139,111,92,0.4);
 }
 
 .tab.active::after {
