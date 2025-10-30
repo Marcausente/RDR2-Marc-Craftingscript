@@ -54,23 +54,6 @@ Config.CraftingStations = {
         requiredItems = {}, -- items necesarios para usar la estación
     },
     {
-        name = 'Mesa de Taberna',
-        coords = vector3(-275.0, 785.0, 119.5),
-        heading = 90.0,
-        radius = 2.0,
-        enabled = true,
-        stationType = 'tavern',
-        blip = {
-            label = 'Mesa de Crafting',
-            sprite = 'blip_shop_crafting',
-            scale = 0.8,
-            color = 25, -- marrón
-        },
-        requiredJobs = {'taberna'}, -- Jobs que pueden usar esta estación
-        requireDuty = true, -- Requiere estar de servicio
-        requiredItems = {},
-    },
-    {
         name = 'Mesa de Taberna - Blackwater',
         coords = vector3(-819.40, -1317.50, 43.68),
         heading = 0.0,
