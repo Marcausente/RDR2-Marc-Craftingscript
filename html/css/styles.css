@@ -830,27 +830,29 @@ body {
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 35px;
-    height: 35px;
-    background: linear-gradient(135deg, #8B3D3D 0%, #6B2D2D 100%);
-    border: 2px solid #5C2323;
-    color: #FFF;
-    font-size: 1.4rem;
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, #B87333 0%, #D4A574 60%, #B87333 100%);
+    border: 2px solid #8B6F3C;
+    color: #2C1F13;
+    font-size: 1.2rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    border-radius: 50%;
+    transition: all 0.2s ease;
+    border-radius: 6px;
     box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.5),
-        inset 0 2px 4px rgba(255, 255, 255, 0.1);
+        0 3px 8px rgba(0, 0, 0, 0.35),
+        inset 0 1px 1px rgba(255, 255, 255, 0.25);
     z-index: 1001;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.3);
 }
 
 .close-crafting:hover {
-    background: linear-gradient(135deg, #A84D4D 0%, #8B3D3D 100%);
-    transform: scale(1.1) rotate(90deg);
+    background: linear-gradient(135deg, #C8823F 0%, #E1BC8D 60%, #C8823F 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.45), inset 0 1px 1px rgba(255,255,255,0.35);
 }
 
 .recipe-card.hidden {

@@ -703,6 +703,18 @@ window.addEventListener('message', function(event) {
         case 'hideUI':
             document.querySelector('.crafting-container').style.display = 'none';
             break;
+        case 'forceStationLevel':
+            if (data.data) {
+                if (typeof data.data.stationLevel !== 'undefined') {
+                    playerData.stationLevel = data.data.stationLevel;
+                }
+                if (data.data.stationType) {
+                    playerData.stationType = data.data.stationType;
+                }
+                const lvl = document.getElementById('stationLevel');
+                if (lvl) lvl.textContent = `Nivel ${playerData.stationLevel}`;
+            }
+            break;
         case 'loadPlayerData':
             loadPlayerData(data.data);
             break;
