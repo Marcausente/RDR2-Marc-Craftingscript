@@ -8,52 +8,42 @@
 </head>
 <body>
     <div class="crafting-container">
-        <!-- Pizarra principal -->
         <div class="wooden-board">
-            <!-- Cabecera de la pizarra -->
-            <div class="board-header">
-                <div class="copper-strip"></div>
-                <h1 class="board-title">Manual de Artesanía</h1>
-                <div class="copper-strip"></div>
-            </div>
-
-            <!-- Información del trabajador -->
-            <div class="worker-info">
-                <div class="info-plate">
-                    <span class="plate-label">Oficio</span>
-                    <span class="plate-value" id="playerJob">Armero</span>
+            <!-- NAVBAR -->
+            <div class="topbar">
+                <div class="nav-left">
+                    <div class="navbar" id="categoryTabs"></div>
                 </div>
-                <div class="info-plate">
-                    <span class="plate-label">Experiencia</span>
-                    <span class="plate-value" id="stationLevel">Nivel I</span>
+                <div class="nav-right">
+                    <div class="level-pill"><span id="stationLevel">Nivel I</span></div>
                 </div>
             </div>
 
-            <!-- Pestañas de categorías -->
-            <div class="category-tabs" id="categoryTabs">
-                <!-- Las pestañas se cargarán dinámicamente -->
+            <!-- CONTENIDO A DOS COLUMNAS -->
+            <div class="content-2col">
+                <!-- Columna izquierda: Items -->
+                <div class="items-column">
+                    <div class="items-grid" id="itemsGrid"></div>
+                </div>
+
+                <!-- Columna derecha: Detalle -->
+                <div class="detail-column">
+                    <div class="detail-panel" id="detailPanel">
+                        <div class="detail-header">
+                            <div class="detail-title" id="detailName">Selecciona un ítem</div>
+                        </div>
+                        <div class="detail-desc" id="detailDesc">Elige un ítem de la lista para ver los detalles.</div>
+                        <div class="detail-subtitle">Materiales necesarios</div>
+                        <div class="detail-materials" id="detailMaterials"></div>
+                        <div class="detail-actions">
+                            <button class="btn btn-primary" id="craftBtn" disabled>CRAFT</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Sección de recetas -->
-            <div class="recipes-section">
-                <div class="section-divider"></div>
-                <div class="recipes-grid" id="recipesGrid">
-                    <!-- Las recetas se cargarán dinámicamente -->
-                </div>
-                <div class="section-divider"></div>
-            </div>
-            
-            <!-- Controles de paginación estilo antiguo -->
-            <div class="page-controls" id="pagination">
-                <button class="page-nav" id="prevPage">← Anterior</button>
-                <span class="page-counter" id="pageInfo">Página 1 de 1</span>
-                <button class="page-nav" id="nextPage">Siguiente →</button>
-            </div>
-            
             <!-- Botón de cerrar -->
-            <button class="close-crafting" id="closeCrafting">
-                <span>&times;</span>
-            </button>
+            <button class="close-crafting" id="closeCrafting"><span>&times;</span></button>
         </div>
 
         <!-- Modal de confirmación -->

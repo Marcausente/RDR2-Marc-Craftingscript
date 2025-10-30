@@ -376,6 +376,12 @@ function OpenCraftingUI(playerData, recipes)
         type = 'loadPlayerData',
         data = playerData
     })
+
+    -- Forzar nivel de mesa explícitamente para evitar carreras de mensajes
+    SendNUIMessage({
+        type = 'forceStationLevel',
+        data = { stationLevel = stationLevel, stationType = playerData.stationType }
+    })
     
     SendNUIMessage({
         type = 'loadRecipes',

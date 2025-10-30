@@ -73,6 +73,88 @@ body {
     flex-direction: column;
 }
 
+/* Top NAVBAR */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.navbar {
+    display: flex;
+    gap: 8px;
+}
+
+.level-pill {
+    background: linear-gradient(135deg, #A67C52 0%, #8B5A3C 100%);
+    color: #2C1F13;
+    border: 2px solid #6B4C2F;
+    padding: 8px 14px;
+    border-radius: 16px;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2);
+}
+
+/* Contenido dividido */
+.content-2col {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 12px;
+    height: calc(100% - 60px);
+}
+
+.items-column, .detail-column {
+    background: rgba(232, 213, 183, 0.06);
+    border: 2px solid #8B6F5C;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.item-tile {
+    background: linear-gradient(135deg, rgba(232,213,183,.55), rgba(203,185,159,.5));
+    border: 2px solid #8B6F5C;
+    border-radius: 4px;
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.item-tile:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,.35); }
+.item-tile.active { outline: 2px solid #A67C52; box-shadow: 0 0 0 2px #A67C52 inset; }
+
+.item-icon { width: 72px; height: 72px; object-fit: contain; image-rendering: pixelated; }
+.item-name { font-family: 'Cinzel', serif; font-size: .9rem; color: #1F1509; text-align: center; font-weight: 600; }
+
+.detail-panel { display: flex; flex-direction: column; gap: 10px; height: 100%; }
+.detail-header { border-bottom: 1px solid #A0826D; padding-bottom: 6px; }
+.detail-title { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; color: #1F1509; }
+.detail-desc { font-size: .9rem; color: #2C1F13; }
+.detail-subtitle { margin-top: 6px; font-weight: 700; color: #1F1509; text-transform: uppercase; font-size: .8rem; }
+.detail-materials { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex: 1; }
+.mat-row { display: flex; align-items: center; justify-content: space-between; background: rgba(139,111,92,.15); border-left: 2px solid #8B6F5C; padding: 6px 8px; }
+.mat-left { display: flex; align-items: center; gap: 8px; }
+.mat-icon { width: 20px; height: 20px; object-fit: contain; }
+.mat-name { color: #1F1509; font-weight: 600; }
+.mat-amount { font-weight: 700; }
+.mat-amount.ok { color: #3A6B27; }
+.mat-amount.missing { color: #8B2D2D; }
+.detail-actions { border-top: 1px solid #A0826D; padding-top: 8px; display: flex; justify-content: flex-end; }
+
 /* Tiras de cobre */
 .copper-strip {
     flex: 1;
@@ -294,6 +376,28 @@ body {
     margin-bottom: 2px;
 }
 
+/* Cuerpo con icono + detalles */
+.recipe-body {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 8px;
+    align-items: start;
+}
+
+.recipe-thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.recipe-icon {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+}
+
 .recipe-ingredients {
     margin-top: 4px;
 }
@@ -315,6 +419,18 @@ body {
     border-left: 2px solid #8B6F5C;
     margin-bottom: 2px;
     font-size: 0.75rem;
+}
+
+.ingredient-item .ingredient-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    margin-right: 6px;
+}
+
+.recipe-details {
+    display: flex;
+    flex-direction: column;
 }
 
 .ingredient-name {

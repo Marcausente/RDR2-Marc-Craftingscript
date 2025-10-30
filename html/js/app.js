@@ -20,6 +20,7 @@ let currentCrafting = null;
 let craftingInterval = null;
 let currentPage = 1;
 const itemsPerPage = 6; // 2 columnas x 3 filas
+let selectedRecipe = null;
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
@@ -42,6 +43,12 @@ function initializeEventListeners() {
     
     // Barra de progreso
     document.getElementById('cancelProgress').addEventListener('click', cancelCrafting);
+    // Botón Craft del panel
+    document.getElementById('craftBtn').addEventListener('click', () => {
+        if (!selectedRecipe) return;
+        currentCrafting = selectedRecipe;
+        confirmCrafting();
+    });
     
     // Paginación
     document.getElementById('prevPage').addEventListener('click', () => changePage(-1));
@@ -75,7 +82,9 @@ function loadRecipes(recipes) {
     
     currentRecipes = recipes;
     initializeTabs();
-    renderRecipes();
+    renderItemsGrid();
+    // Reafirmar nivel en la UI por si loadRecipes llega antes que loadPlayerData
+    updatePlayerInfo();
 }
 
 // Actualizar información del jugador
@@ -189,33 +198,63 @@ function switchCategory(category) {
     });
     document.querySelector(`[data-category="${category}"]`).classList.add('active');
     
-    // Renderizar recetas de la nueva categoría
-    renderRecipes();
+    // Renderizar ítems de la nueva categoría
+    selectedRecipe = null;
+    renderItemsGrid();
 }
 
-// Renderizar recetas
-function renderRecipes() {
-    console.log('[marc_crafting] Debug - Renderizando recetas de categoría:', currentCategory);
-    
-    const grid = document.getElementById('recipesGrid');
+// Renderizar grid de items (icono + nombre)
+function renderItemsGrid() {
+    const grid = document.getElementById('itemsGrid');
     grid.innerHTML = '';
-    
     const recipes = currentRecipes[currentCategory] || [];
-    
     if (recipes.length === 0) {
-        grid.innerHTML = '<div style="text-align: center; color: #D2B48C; padding: 20px;">No hay recetas disponibles en esta categoría</div>';
-        updatePagination();
+        grid.innerHTML = '<div style="text-align:center;color:#D2B48C;padding:20px;">Sin ítems en esta categoría</div>';
+        renderDetail(null);
         return;
     }
-    
-    recipes.forEach((recipe, index) => {
-        console.log('[marc_crafting] Debug - Creando tarjeta para receta:', recipe.name);
-        const recipeCard = createRecipeCard(recipe, index);
-        grid.appendChild(recipeCard);
+    recipes.forEach((recipe, idx) => {
+        const tile = document.createElement('div');
+        tile.className = 'item-tile';
+        tile.dataset.index = idx;
+        const icon = recipe.icon ? `<img class="item-icon" src="${getItemImageURL(recipe.icon)}" alt="${recipe.name}">` : (currentCategory === 'weapons' ? getWeaponIcon(recipe.item || recipe.name || '') : '<div style="width:72px;height:72px;"></div>');
+        tile.innerHTML = `${icon}<div class="item-name">${recipe.name}</div>`;
+        tile.addEventListener('click', () => selectRecipe(idx));
+        grid.appendChild(tile);
     });
-    
-    currentPage = 1;
-    showPage(1);
+    // Autoselect primero
+    selectRecipe(0);
+}
+
+function selectRecipe(index) {
+    const recipes = currentRecipes[currentCategory] || [];
+    selectedRecipe = recipes[index] || null;
+    document.querySelectorAll('.item-tile').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+    });
+    renderDetail(selectedRecipe);
+}
+
+function renderDetail(recipe) {
+    const nameEl = document.getElementById('detailName');
+    const descEl = document.getElementById('detailDesc');
+    const matsEl = document.getElementById('detailMaterials');
+    const craftBtn = document.getElementById('craftBtn');
+    if (!recipe) {
+        nameEl.textContent = 'Selecciona un ítem';
+        descEl.textContent = 'Elige un ítem de la lista para ver los detalles.';
+        matsEl.innerHTML = '';
+        craftBtn.disabled = true;
+        return;
+    }
+    nameEl.textContent = recipe.name;
+    descEl.textContent = recipe.description || 'Sin descripción';
+    matsEl.innerHTML = (recipe.ingredients || []).map(ing => {
+        const icon = ing.icon ? `<img class=\"mat-icon\" src=\"${getItemImageURL(ing.icon)}\" alt=\"${ing.item}\">` : '';
+        const ok = hasIngredient(ing);
+        return `<div class=\"mat-row\"><div class=\"mat-left\">${icon}<span class=\"mat-name\">${ing.item}</span></div><div class=\"mat-amount ${ok ? 'ok' : 'missing'}\">${ing.amount}</div></div>`;
+    }).join('');
+    craftBtn.disabled = false;
 }
 
 // Mostrar página específica
@@ -412,7 +451,7 @@ function createRecipeCard(recipe, index) {
         </div>
     `;
     
-    // Todas las recetas mostradas se pueden craftear
+    // Usado por el diseño antiguo; no se usa en el nuevo grid
     card.addEventListener('click', () => showConfirmModal(recipe));
     
     return card;
@@ -661,6 +700,19 @@ window.addEventListener('message', function(event) {
             break;
         case 'hideUI':
             document.querySelector('.crafting-container').style.display = 'none';
+            break;
+        case 'forceStationLevel':
+            if (data.data) {
+                if (typeof data.data.stationLevel !== 'undefined') {
+                    playerData.stationLevel = data.data.stationLevel;
+                }
+                if (data.data.stationType) {
+                    playerData.stationType = data.data.stationType;
+                }
+                // Actualizar visual inmediatamente sin depender de otros mensajes
+                const lvl = document.getElementById('stationLevel');
+                if (lvl) lvl.textContent = `Nivel ${playerData.stationLevel}`;
+            }
             break;
         case 'loadPlayerData':
             loadPlayerData(data.data);
